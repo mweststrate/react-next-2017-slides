@@ -2,7 +2,7 @@
 <html>
 	<head>
 		<meta charset="utf-8" />
-		<title>slides</title>
+		<title>React, but for data</title>
 		<style>
 			@import url('https://fonts.googleapis.com/css?family=Playfair+Display|Raleway|Archivo+Black');
 
@@ -25,14 +25,10 @@ table {
     width: 100%;
 }
 
-h1 {
-    position: absolute;
-    top: 10px;
-    display: block;
+.remark-slide-content h1 {
     text-align: center;
-    width: calc(1280px - 4em);
-    /*border-bottom: 1px solid #ddd;*/
-    font-size: 40px;
+    font-size: 50px;
+    margin-top: 0px;
 }
 
 p, li, div {
@@ -71,8 +67,6 @@ hr {
 }
 
 .boring .remark-code {
-    background-color: black;
-    padding: 0em 8em !important;
     opacity: 0.7;
 }
 
@@ -83,8 +77,6 @@ hr {
 
 ul, ol {
     text-align: left;
-    display: inline-block;
-    clear: both;
 }
 
 .appear {
@@ -98,19 +90,13 @@ ul, ol {
 
 .remark-slide-content ol, .remark-slide-content ul {
     text-align: left;
-    margin-left: 4em;
 }
 
 .remark-slide-content pre {
     text-align: left;
-    margin-left: -4em;
-    margin-right: -4em;
-    padding-left: 0;
-    padding-right: 0;
 }
 
 .remark-slide-content pre  code.remark-code {
-    padding: 0.5em 8em;
 }
 
 .remark-inline-code {
@@ -121,7 +107,6 @@ ul, ol {
 .remark-slide-content .appeared pre code,
 .remark-slide-content .boring pre code
 {
-    margin-left: 3em;
 }
 
 .fullscreen, .fullscreenw, .boxedimg {
@@ -200,97 +185,97 @@ div.lighten {
 
 /* ---- */
 
-.box-actions {
-    color: white;
-    background-color: #f99b1d;
-    width: 30%;
-    height: 300px;
-}
-
-.box-state {
-    color: white;
-    background-color: #1780b9;
-    width: 30%;
-    height: 300px;
-}
-
-.box-computed {
-    color: white;
-    background-color: #76ca02;
-    width: 30%;
-    height: 150px;
-}
-
-.box-reactions {
-    color: white;
-    background-color: orangered;
-    width: 30%;
-    height: 150px;
-}
-
-.box1, .box1 code {
-    color: #1780b9;
-}
-.box3, .box3 code {
-    color: #76ca02;
-}
-.box4, .box4 code {
-    color: orangered;
-}
-.box2, .box2 code {
-    color: #f99b1d;
-}
-
-.box1, .box2, .box3, .box4 {
-    font-weight: bold;
-}
-
-.ticks2 p, .ticks3 p {
-    line-height: 0.85em;
-}
-
-.ticks2 .tick1, .ticks2 .tick2 {
-        width: 60%;
-}
-
-.ticks3 .tick1, .ticks3 .tick2 {
-        width: 80%;
-}
-
-.tick1, .tick2 {
-    border-bottom: 1px solid #ccc;
-    padding: 0px 4px 4px 0px;
+.inline_block {
     display: inline-block;
-    text-align: left;
-    font-size: 0.6em;
 }
 
-.tick1 .em, .tick2 .em {
+.left, .right {
+    box-sizing: border-box;
+    width: 50%;
+    float: left;
+}
+
+.left {
+    padding-right: 40px;
+    border-right: 1px dotted #ccc;
+}
+.right {
+    padding-left: 40px;
+}
+
+.bg_orange {
+    background-color: #f99b1d;
+}
+
+.bg_navy {
+    background-color: #1780b9;
+}
+
+.bg_green {
+    background-color: #76ca02;
+}
+
+.bg_purple {
+    background-color: rgba(167, 66, 122, 0.85);
+}
+
+.bg_red {
+    background-color: rgba(212, 100, 102, 0.85);
+}
+
+
+.number {
+    width: 200px;
+    float: left;
+    top: 200px;
+    color: white;
+    font-size: 145px;
+    border-radius: 100px;
+    height: 200px;
+    vertical-align: middle;
+    font-weight: bold;
+    margin: 50px;
+    text-align: center;
+    line-height: 188px;
+}
+
+.number_column {
+    left: 361px;
     position: absolute;
-    font-size: 0.7em;
+    width: 750px;
+    height: 400px;
+    text-align: left;
+    display: block;
+    padding: 0px;
 }
 
-.ticks2 .tick1 .em-white_check_mark {
-    left: 614px;
-}
-.ticks2 .tick2 .em-white_check_mark {
-    left: 800px;
+.number_column > pre {
+    margin-top: 35px;
 }
 
-.ticks3 .tick1 .em-white_check_mark {
-    left: 520px;
-}
-.ticks3 .tick2 .em-white_check_mark {
-    left: 702px;
-}
-.ticks3 .tick1 .em-palm_tree, .ticks3 .tick2 .em-palm_tree {
-    left: 881px;
-}
-.tick1.faded, .tick2.faded {
-    opacity: 0.2;
+.hljs-idea .hljs-tag {
+    background: white !important;
 }
 
+/**
+Custom slide stuff
+*/
 
+.type_create {
+    padding-top: 80px;
+    padding-bottom: 80px;
+    color: #ccc;
+    font-size: 8em;
+    font-weight: bold;
+    width: 1210px;
+    margin-left: -80px;
+    white-space: nowrap;
+}
+
+.type_create img{
+    max-height: 170px;
+    max-width: 270px;
+}
 		</style>
 		<link href="https://afeld.github.io/emoji-css/emoji.css" rel="stylesheet">
 	</head>
@@ -298,25 +283,29 @@ div.lighten {
 		<textarea id="source">
 <!-- 00_intro.md-->
 
-<img src="img/eden2.jpg" style="    position: absolute;
-    left: 0px;
-    top: -65px;
-    width: 100%;"/>
-
-<div style="    position: absolute;
+<img src="img/paper1.jpg" style="
+    position: absolute;
+    left: -109px;
     top: 0px;
-    left: 0px;
+    height: 100%;
+"    />
+
+<div style="
+    position: absolute;
+    top: 0px;
+    left: 525px;
     width: 50%;
     background: white;
     height: 700px;
+    padding: 40px;
 ">
 <br/><br/>
 <img src="img/mobx2.png" height="80px" />
 <img src="img/logo.png" style="height:80px"/>
-## Next Generation State Management
+## React, but for data
 
 <small>
-React Europe 2017
+React Next 2017
 
 Michel Weststrate - @mweststrate
 </small>
@@ -329,891 +318,409 @@ Michel Weststrate - @mweststrate
 
 ---
 
-![tree](img/tree.png)
-
-???
-Not these trees, but actual living trees like this
-
-If you havent been outside for a while, and your like; I have
-
-seen these things before. Your right, they were featured in lord of the rings. That's where you might have seen them before.
-
-But lets first talk about state management first
-
-
----
-
-class: fullscreenw
-
-![tree](img/tree.jpg)
-
----
 
 class: fullscreen
 
-![tree](img/treebeard.png)
+![tree](img/bathroom.jpg)
 
 ---
 
-class: fullscreenw
-
-![tree](img/20170517_113857.jpg)
+I <i class="em em-heart"></i> React
 
 ---
 
-class: fullscreenw
+# React: declarative composition
 
-![tree](img/eden2.jpg)
-
-???
-
-Living trees are awesome. Unless you eat from the wrong one. Then you die.
-
-But that is a feature in itself. I will elaborate on that later.
-
----
-
-`redux || mobx`
-
-.appear[
-    `true`
+.number.bg_navy[
+  1
 ]
 
-???
-
-There is often a heated debate. I am no neutral party in the discussion, but lets recap the two strategies in general. And I oversimplify and generalize to do that
-
----
-
-MobX vs Redux: Comparing the Opposing Paradigm
-
-.appear[
-        <i class="em em-arrow_double_down"></i>
-
-MobX vs Redux: *Combining* the Opposing Paradigm
+.number_column[
+```javascript
+const Bathroom = () =>
+    <div className="Bathroom">
+        <BathroomIcon />
+        <FlushingIcon />
+        <Painting />
+        <Buttons />
+        <ToiletPaper />
+        <Toilet />
+    </div>
+```
 ]
 
-???
+---
 
-Can we have all the cool things of Redux, without it's learning curve?
+# React: contract based
 
-You might now all have digested that. TIme to confuse you with something new
+.number.bg_orange[
+  2
+]
+
+.number_column[
+1. Only props are exposed
+1. Internal state encapsulated
+1. Runtime type checking
+]
+---
+
+# React: contract based
+
+.number.bg_orange[
+  2
+]
+
+.number_column[
+```javascript
+export class Bathroom extends Component {
+    static.propTypes = {
+        drain: PropTypes.object,
+        electricity: PropTypes.object
+    }
+}
+```
+]
 
 ---
 
-<img src="img/logo.png" style="height:150px"/>
+# React: explicit lifecycle
 
-## mobx-state-tree
+.number.bg_green[
+  3
+]
 
-*A living, opinionated, state tree*
+.number_column[
+```javascript
+export class Bathroom extends Component {
+    componentWillMount() {
+        this.connectToDrain()
+    }
 
----
-
-<img src="img/logo.png" style="height:150px"/>
-
-## mobx-state-tree
-
-The best ideas<i class="em em-bulb"></i>
-<br/>+<br/>
-The best practices<i class="em em-construction_worker"></i>
-<br/>=<br/>
-The best productivity<i class="em em-running"></i>
-
----
-
-# Mutable Model Graphs
-
-<br/>
-<br/>
-
-![graph1](img/graph1.png)
+    componentWillunmount() {
+        this.disconnectFromDrain()
+    }
+}
+```
+]
 
 ---
 
-# Mutable Model Graphs
+# React: dependency injection
 
-<br/>
-<br/>
+.number.bg_purple[
+  4
+]
 
-![graph2](img/graph2.png)
-
----
-
-# Mutable Model Graphs
-
-<br/>
-<br/>
-
-![graph3](img/graph3.png)
-
----
-
-# Immutable Data Trees
-
-<br/>
-<br/>
-
-![redux](img/redux1.png)
-
-???
-
-Two years ago, Redux was introduced on this very same conference. And it has set a new level on what we want in terms of DX and predictability.
+.number_column[
+```javascript
+class Lightbulb extends React.Component {
+  static contextTypes = {
+    electricity: PropTypes.object
+  }
+}
+```
+]
 
 ---
 
-# Immutable Data Trees
+# React: instance reconciliation
 
+.number.bg_red[
+  5
+]
+
+.number_column[
+1. Performance
+2. Preserve internal state<br/ ><input value="Test" style="margin-left: 7px;
+    padding: 5px;
+    font-size: 16px;
+    border: 2px solid #ccc;" />
+]
+
+---
+
+# React: control & flexibility
+
+.inline_block[
+1. Declarative
+2. Internal state hidden, type-checked api
+3. Model lifecycle
+4. Dependency injection
+5. Preserve internal state
+]
+---
+<!-- 05_mst_overview.md-->
+
+<img src="img/logo.png" style="height:200px"/>
+
+# Mobx-State-Tree
+
+---
+
+class: columns
+
+.left[
+<center>Snapshots: Raw data</center>
 <br/>
 <br/>
+<img src="img/json.svg" width="100%" />
+]
 
-![redux](img/redux2.png)
-
----
-
-# Immutable Data Trees
-
+.right[
+<center>Types: Data models</center>
 <br/>
 <br/>
-
-![redux](img/redux3.png)
-
----
-
-class: ticks2
-
-<p style="position:relative;left: 106px;font-style:italic;">
-    <span style="font-size: 0.6em">Immutable Trees &nbsp;&nbsp;&nbsp; Model Graphs<span>
-</p>
-
-.tick1[cheap snapshots<i class="em em-white_check_mark"></i>]
-.tick2[fine grained updates<i class="em em-white_check_mark"></i>]
-.tick1[tree structure<i class="em em-white_check_mark"></i>]
-.tick2[graph structure<i class="em em-white_check_mark"></i>]
-.tick1[easy hydration<i class="em em-white_check_mark"></i>]
-.tick2[co-location of actions<i class="em em-white_check_mark"></i>]
-.tick1[protection of data<i class="em em-white_check_mark"></i>]
-.tick1[replayable actions<i class="em em-white_check_mark"></i>]
-.tick2[straight forward actions<i class="em em-white_check_mark"></i>]
-.tick1[devtool support<i class="em em-white_check_mark"></i>]
-.tick2[static analysis / typing<i class="em em-white_check_mark"></i>]
-.tick1[ref-by-state<i class="em em-white_check_mark"></i>]
-.tick2[ref-by-identity<i class="em em-white_check_mark"></i>]
-
-???
-
-Why a tree Trees can be traversed in predicatable, finite order
-
+<center><img src="img/types.svg" height="300px" /></center>
+]
 
 ---
 
-## Snapshots Are Awesome<i class="em em-camera"></i>
+# const tree = Type.create(data)
+.type_create[
+<img src="img/types.svg" />
++
+<img src="img/json.svg" />
+=
+<img src="img/mst_tree.svg" />
+]
 
-.appear[What if I could get them for free after each mutation?]
-
-???
-
-Snapshots are awesome; like taxes are awesome. I like the idea because all the benefits it yields. I just don't like to pay
-
-So what if..
-
-.. structural sharing is mandatory
-
----
-
-class: boxedimg
-
-![img](img/tree_store.png)
-
----
-
-Demo
+.appear[
+Types: Actions. Local state. Type-checking.
+]
 
 ---
 
 ```javascript
-class Book {
-    @observable title: string
-    @observable price: number
+const Sh_t = types.model({
+    type: types.literal("sh_t"),
+    weight: 500,
+    smell: 7
+})
 
-    @computed get snapshot() {
-        return {
-            title: this.title,
-            price: this.number
+const Duck = types.model({
+    type: types.literal("duck"),
+    name: "Donald"
+})
+
+const Toilet = types.model({
+    isFlushing: false,
+    pile: types.array(types.union(Sh_t, Duck))
+})
+
+const Bathroom = types.model({
+    amountOfToiletPaper: 0,
+    toilet: Toilet,
+    painting: Painting
+})
+```
+
+---
+
+```javascript
+const initialState = window.localStorage.getItem("bathroom")
+
+const bathroom = BathroomModel.create(initialState)
+
+ReactDOM.render(
+    <Bathroom bathroom={bathroom} />,
+    document.getElementById("root")
+)
+```
+
+---
+
+# tree.callAction()
+.type_create[
+<img src="img/mst_tree.svg" />
+&rarr;
+<img src="img/mst_tree_2.svg" />
+]
+
+.appear[
+Actions modify node properties & local state
+]
+
+---
+
+```javascript
+const Toilet = types
+    .model(/* ... */)
+    .actions(self => {
+        function donate() {
+            if (Duck.is(self.pile[0])) self.pile.clear()
+            self.pile.push({ type: "sh_t" })
         }
-    }
-}
-```
 
----
+        const flush = process(function* flush() {
+            if (self.isFlushing) return
+            self.isFlushing = true
+            yield delay(2000)
+            self.pile = [{ type: "duck" }]
+            self.isFlushing = false
+        })
 
-```javascript
-class Store {
-    @observable books: Book[] = []
-
-    @computed get snapshot() {
         return {
-            todos: this.books.map(book => book.snapshot)
+            donate,
+            flush
         }
-    }
-}
+    })
 ```
 
 ---
-
-class: boxedimg
-
-![img](img/todo1.png)
-
----
-
-class: boxedimg
-
-![img](img/todo2.png)
-
----
-
-class: boxedimg
-
-![img](img/todo3.png)
-
----
-
-class: boxedimg
-
-![img](img/seeds.png)
-
----
-
-<img src="img/seed1.png" width="350px"/>
-<img src="img/seed2.png" width="350px"/>
-
-* How to get back from a seed to a full tree? <i class="em em-deciduous_tree"></i>
-* `get snapshot` boilerplate <i class="em em-confused"></i>
-
----
-
-Demo
-
----
-
 
 ```javascript
-import { onSnapshot, applySnapshot } from "mobx-state-tree"
+export const Bathroom = types
+    .model(/* ... */)
+    .actions(self => {
+        function wipe() {
+            if (self.amountOfToiletPaper <= 0)
+                throw new Error("OutOfToiletPaperException")
+            self.amountOfToiletPaper -= 1
+        }
 
-const history = []
+        function restock() {
+            self.amountOfToiletPaper += 3
+        }
 
-onSnapshot(store, snapshot => {
-    history.push(snapshot)
-})
+        function takeA____() {
+            self.toilet.donate()
+            self.wipe()
+            self.wipe()
+            self.toilet.flush()
+        }
 
-replay(index) {
-    applySnapshot(store, history[index])
-}
+        return { wipe, restock, takeA____ }
+    })
 ```
 
 ---
 
-## Type Information!<i class="em em-dizzy"></i>
-
-.appear[Compile time type checks]
-
-.appear[Run time type checks]
-
-.appear[Behavior]
-
----
-
-class: boxedimg
-
-![img](img/mst3.png)
-
----
-
-# Composing Types
-
-```javascript
-import {types, getSnapshot} from "mobx-state-tree"
-
-const Type = types.model(properties, actions)
-```
-
-.appear[
-```javascript
-const instance = Type.create(snapshot)
-instance.someAction()
-```
+# const data = getSnapshot(tree)
+.type_create[
+<img src="img/mst_tree_2.svg" />
+&rarr;
+<img src="img/json_2.svg" />
 ]
 
 .appear[
-```javascript
-const snapshot = getSnapshot(instance)
-```
+Reactive. Immutable. Cheap. Structurally shared.
 ]
 
 ---
 
-# Composing Types
-
 ```javascript
-const Book = types.model({
-    title: types.string,
-    price: types.number
-}, {
-    setPrice(newPrice) {
-        this.price = newPrice
-    }
-})
-```
+const bathroom = BathroomModel.create(initialState)
 
-.appear[
-```javascript
-const Store = types.model({
-    books: types.array(Book)
-})
-```
-]
-
----
-
-# Composing Types
-
-```javascript
-const store = Store.create({
-    books: [{
-        title:
-            "The Hidden Life of Trees: What They Feel, How They Communicate",
-        price: 24.95
-    }]
-})
-
-```
-
-.appear[
-```javascript
-store.books[0].setPrice(13.57)
-```
-]
-
----
-
-# Composing Types
-
-```javascript
-store.books.push(Book.create({ title: "A Tree Grows in Brooklyn" }))
-```
-
-.appear[
-```javascript
-store.books.push({ title: "A Tree Grows in Brooklyn" })
-```
-]
-
-.appear[
-```javascript
-store.books[0].setPrice(13.57)
-```
-]
-
-???
-
-When modifying the tree at any point, type is infered from the typesystem and applied
-
----
-
-# Run Time Type Checking
-
-```javascript
-const store = Store.create({
-    books: [{
-        price: "24.95"
-    }]
-})
-```
-
-.appear[
-```
-Error while converting `{"books":[{"price":"24.95"}]}` to `Store`:
- at path "/books/0/title" value `undefined` is not assignable to type: `string`.
- at path "/books/0/price" value `"24.95"` is not assignable to type: `number`.
-```
-]
-
----
-
-# Design Time Type Checking
-
-<br/>
-<br/>
-
-.appear[
-![img](img/tserror2.png)
-]
-
----
-
-# Type Checking
-
-TComb inspired
-
-collections, refinements, unions, literals, recursive types
-
-<img src="img/gcanti.png" height="200px" style="border-radius:10px; margin-right: 20px;"/>
-<img src="img/mattia.jpg" height="200px" style="border-radius:10px"/>
-
-???
-
-Mattia Manzati https://twitter.com/@mattiamanzati) and
-Giulio Canti https://twitter.com/GiulioCanti),
-
----
-
-class: ticks3
-
-<p style="position:relative;left: 106px;font-style:italic;">
-    <span style="font-size: 0.6em">Immutable Trees &nbsp;&nbsp;&nbsp; Model Graphs&nbsp;&nbsp;&nbsp; Mobx-State-Tree<span>
-</p>
-
-.tick1[cheap snapshots<i class="em em-white_check_mark"></i>.appear[<i class="em em-palm_tree"></i>]]
-.tick2.faded[fine grained updates<i class="em em-white_check_mark"></i>]
-.tick1[tree structure<i class="em em-white_check_mark"></i>.appear[<i class="em em-palm_tree"></i>]]
-.tick2.faded[graph structure<i class="em em-white_check_mark"></i>]
-.tick1[easy hydration<i class="em em-white_check_mark"></i>.appear[<i class="em em-palm_tree"></i>]]
-.tick2[co-location of actions<i class="em em-white_check_mark"></i>.appear[<i class="em em-palm_tree"></i>]]
-.tick1.faded[protection of data<i class="em em-white_check_mark"></i>]
-.tick1.faded[replayable actions<i class="em em-white_check_mark"></i>]
-.tick2[straight forward actions<i class="em em-white_check_mark"></i>.appear[<i class="em em-palm_tree"></i>]]
-.tick1.faded[devtool support<i class="em em-white_check_mark"></i>]
-.tick2[static analysis / typing<i class="em em-white_check_mark"></i>.appear[<i class="em em-palm_tree"></i>]]
-.tick1.faded[ref-by-state<i class="em em-white_check_mark"></i>]
-.tick2.faded[ref-by-identity<i class="em em-white_check_mark"></i>]
-
----
-
-Patches Demo
-
-???
-
-MobX powered
-
-Patches
-
----
-
-# Actions
-
-```javascript
-const Book = types.model({
-    title: types.string,
-    price: types.number
-}, {
-    setPrice(newPrice) {
-        this.price = newPrice
-    }
+onSnapshot(bathroom, snapshot => {
+    window.localStorage.setItem("bathroom", JSON.stringify(snapshot))
 })
 ```
 
 ---
 
-# Actions
+# applySnapshot(tree, data)
 
-* Instances can only be modified through actions
-* Actions can only modify own subtree
-
----
-
-# Actions
-
-```javascript
-store.books[0].title = "I hate trees!"
-```
-
-.appear[
-```
-Error: Cannot modify 'Book@/books/0',
-the object is protected and can only be modified by using an action.
-```
-]
-
----
-
-Demo
-
----
-
-# Actions
-
-* Replayable
-* Method invocation _produces_ action description
-* Middleware support
-
----
-
-## Use Case: Modify Complex Data In Wizard
-
-???
-
-Use case syncing actions over websockets with other clients
-
----
-
-```javascript
-import { clone, recordActions } from "mobx-state-tree"
-
-const bookCopy = clone(store.books[0])
-```
-
-.appear[
-```javascript
-function clone(tree) {
-    return getType(tree).create(getSnapshot(tree))
-}
-```
-]
-
----
-
-```javascript
-import { clone, recordActions } from "mobx-state-tree"
-
-const bookCopy = clone(store)
-const recorder = recordActions(bookCopy)
-```
-
-.appear[
-```javascript
-...user modifies the book in a wizard
-And upon commit...
-```
+.type_create[
+<img src="img/mst_tree.svg" />
++
+<img src="img/json_2.svg" />
+&rarr;
+<img src="img/mst_tree_2.svg" />
 ]
 
 .appear[
-```javascript
-recorder.replay(store.books[0])
-```
+Reconciliation. Minimal amount of changes. Preserve state.
 ]
 
 ---
 
-class: ticks3
-
-<p style="position:relative;left: 106px;font-style:italic;">
-    <span style="font-size: 0.6em">Immutable Trees &nbsp;&nbsp;&nbsp; Model Graphs&nbsp;&nbsp;&nbsp; Mobx-State-Tree<span>
-</p>
-
-.tick1.faded[cheap snapshots<i class="em em-white_check_mark"></i><i class="em em-palm_tree"></i>]
-.tick2[fine grained updates<i class="em em-white_check_mark"></i>.appear[<i class="em em-palm_tree"></i>]]
-.tick1.faded[tree structure<i class="em em-white_check_mark"></i><i class="em em-palm_tree"></i>]
-.tick2.faded[graph structure<i class="em em-white_check_mark"></i>]
-.tick1.faded[easy hydration<i class="em em-white_check_mark"></i><i class="em em-palm_tree"></i>]
-.tick2.faded[co-location of actions<i class="em em-white_check_mark"></i><i class="em em-palm_tree"></i>]
-.tick1[protection of data<i class="em em-white_check_mark"></i>.appear[<i class="em em-palm_tree"></i>]]
-.tick1[replayable actions<i class="em em-white_check_mark"></i>.appear[<i class="em em-palm_tree"></i>]]
-.tick2.faded[straight forward actions<i class="em em-white_check_mark"></i><i class="em em-palm_tree"></i>]
-.tick1.faded[devtool support<i class="em em-white_check_mark"></i>]
-.tick2.faded[static analysis / typing<i class="em em-white_check_mark"></i><i class="em em-palm_tree"></i>]
-.tick1.faded[ref-by-state<i class="em em-white_check_mark"></i>]
-.tick2.faded[ref-by-identity<i class="em em-white_check_mark"></i>]
-
----
-
-class: fullscreen
-
-![img](img/elrond.jpg)
-
-???
-
-"Death is gift to men" (Elrond in a LOTR movie)
-
----
-
-# References
-
 ```javascript
-function printPrice(book: Book) {
-    setTimeout(
-        () => console.log(book.price),
-        1000
-    )
-}
+const Toilet = types
+    .actions(self => {
+        const drain = getEnv(self).drain
 
-printPrice(store.books.get("ISBN-123"))
-```
+        function postCreate() {
+            drain.connect()
+        }
 
-???
+        function beforeDestroy() {
+            drain.disconnect()
+        }
 
-what does `book` parameter refer to?
-* the state of the passed book at a specific point in time?
-* the concept of the passed book, regardless what state it is in currently
+        return {
+            beforeDestroy, postCreate
+        }
+    })
 
----
-
-class: boxedimg
-
-![img](img/seasons.jpg)
-
-???
-
-Refer to the state of the tree at present, or just the concept
-
----
-
-class: boxedimg
-
-![img](img/refs.png)
-
----
-
-# References
-
-```javascript
-function printPrice(book: Book) {
-    setTimeout(
-        () => console.log(book.price),
-        1000
-    )
-}
-
-printPrice(store.books.get("ISBN-123"))
-```
-
-|  Immutable Trees | Mutable Model Graphs |
-| --- | ---- | --- |
-| .appear[`price` won't have changed] | .appear[`price` might have changed] |
-| .appear[`price` might be stale] | .appear[`price` will not be stale] |
-
-???
-
-artifical example. but what if it is no log, but a debounced function to send todo to backend?
-
----
-
-# References
-
-```javascript
-function printPrice(book: Book) {
-    setTimeout(
-        () => console.log(book.price),
-        1000
-    )
-}
-```
-
-```javascript
-printPrice(store.books.get("ISBN-123"))
-```
-
-```javascript
-printPrice(getSnapshot(store.books.get("ISBN-123")))
+const bathroom = Bathroom.create(data, { drain: somedrain })
 ```
 
 ---
 
-# References
+# MST: control & flexibility
 
-```
-printPrice(store.books.get("ISBN-123"))
-store.removeBook("ISBN-123")
-
-// what will be printed?
-```
-
-.appear[
-```
-Error: This object has died and is no longer part
-of a state tree. It cannot be used anymore.
-```
-]
-
-???
-
-Defends against those kind of bugs, where while debugging, you actually are looking at the wrong object without realizing for a while.
-
-Immutability defends against accidental modifications
-
-Defends against accidental stale reads
-
----
-
-class: fullscreenw
-
-![img](img/swing.jpg)
-
----
-
-## mobx-state-tree
-
-Protection against uncoordinated modifications
-
-Protection against stale reads
-
----
-
-class: fullscreenw
-
-![tree](img/eden2.jpg)
-
----
-
-# Graphs
-
-```
-bookStore
-   - books
-       - book A
-       - book B
-   - cart
-       - entry 1
-           - book A ?
-           - quantity
-       - entry 2
-           - book B ?
-           - quantity
-```
-
----
-
-# Graphs
-
-<br/>
-
-```javascript
-const CartEntry = types.model({
-    amount: types.number,
-    book: types.reference(Book)
-})
-
-cartEntry.book = bookStore.books[0]
-
-console.log(bookEntry.book.title) // OK
-
-console.dir(getSnapshot(bookEntry))
-```
-
-.appear[
-```javascript
-{
-    amount: 3,
-    book: "24"
-}
-```
+.inline_block[
+1. Declarative ✅
+2. Internal state hidden, type-checked api ✅
+3. Model lifecycle ✅
+4. Dependency injection ✅
+5. Preserve internal state ✅
 ]
 
 ---
 
-class: ticks3
+# It's React, but for data
 
-.tick1.faded[cheap snapshots<i class="em em-white_check_mark"></i><i class="em em-palm_tree"></i>]
-.tick2.faded[fine grained updates<i class="em em-white_check_mark"></i><i class="em em-palm_tree"></i>]
-.tick1.faded[tree structure<i class="em em-white_check_mark"></i><i class="em em-palm_tree"></i>]
-.tick2[graph structure<i class="em em-white_check_mark"></i>.appear[<i class="em em-palm_tree"></i>]]
-.tick1.faded[easy hydration<i class="em em-white_check_mark"></i><i class="em em-palm_tree"></i>]
-.tick2.faded[co-location of actions<i class="em em-white_check_mark"></i><i class="em em-palm_tree"></i>]
-.tick1.faded[protection of data<i class="em em-white_check_mark"></i><i class="em em-palm_tree"></i>]
-.tick1.faded[replayable actions<i class="em em-white_check_mark"></i><i class="em em-palm_tree"></i>]
-.tick2.faded[straight forward actions<i class="em em-white_check_mark"></i><i class="em em-palm_tree"></i>]
-.tick1[devtool support<i class="em em-white_check_mark"></i>.appear[<i class="em em-palm_tree"></i>]]
-.tick2.faded[static analysis / typing<i class="em em-white_check_mark"></i><i class="em em-palm_tree"></i>]
-.tick1[ref-by-state<i class="em em-white_check_mark"></i>.appear[<i class="em em-palm_tree"></i>]]
-.tick2[ref-by-identity<i class="em em-white_check_mark"></i>.appear[<i class="em em-palm_tree"></i>]]
 
 ---
+<!-- 10_reasoning.md-->
 
-class: ticks3
+# 3 ways to reason about what is happening with data
 
-.tick1[cheap snapshots<i class="em em-white_check_mark"></i><i class="em em-palm_tree"></i>]
-.tick2[fine grained updates<i class="em em-white_check_mark"></i><i class="em em-palm_tree"></i>]
-.tick1[tree structure<i class="em em-white_check_mark"></i><i class="em em-palm_tree"></i>]
-.tick2[graph structure<i class="em em-white_check_mark"></i><i class="em em-palm_tree"></i>]
-.tick1[easy hydration<i class="em em-white_check_mark"></i><i class="em em-palm_tree"></i>]
-.tick2[co-location of actions<i class="em em-white_check_mark"></i><i class="em em-palm_tree"></i>]
-.tick1[protection of data<i class="em em-white_check_mark"></i><i class="em em-palm_tree"></i>]
-.tick1[replayable actions<i class="em em-white_check_mark"></i><i class="em em-palm_tree"></i>]
-.tick2[straight forward actions<i class="em em-white_check_mark"></i><i class="em em-palm_tree"></i>]
-.tick1[devtool support<i class="em em-white_check_mark"></i><i class="em em-palm_tree"></i>]
-.tick2[static analysis / typing<i class="em em-white_check_mark"></i><i class="em em-palm_tree"></i>]
-.tick1[ref-by-state<i class="em em-white_check_mark"></i><i class="em em-palm_tree"></i>]
-.tick2[ref-by-identity<i class="em em-white_check_mark"></i><i class="em em-palm_tree"></i>]
-
----
-
-Demo
-
----
-
-```javascript
-import { types } from 'mobx-state-tree'
-
-const Todo = types.model({
-    text: 'Learn Redux',
-    completed: false,
-    id: 0
-})
-
-const TodoStore = types.model({
-    todos: types.array(Todo),
-
-    findTodoById: function (id) {
-      return this.todos.find(todo => todo.id === id)
-    }
-}, {
-    DELETE_TODO({id}) {
-      this.todos.remove(this.findTodoById(id))
-    }
-    // .. and more
-})
-```
-
-???
-
-why the weird function name?
-why 'learn redux'?
-
-Actually, if you check out the sources, you will notice the original reducer unit tests are still in there
-
----
-
-<img src="img/logo.png" style="height:150px"/>
-
-## MST: Combining The Opposing Paradigms
-
-The best ideas<i class="em em-bulb"></i>
-<br/>+<br/>
-The best practices<i class="em em-construction_worker"></i>
-<br/>=<br/>
-The best productivity<i class="em em-running"></i>
-
-???
-
-When is it available?
-
-Star!
-
-Is it completely ready?
-
-No.
-
-But, worse is better.
-
-Let's publish!
-
-TODO Visit booth prizes thingy
-
----
-
-<div style="position: absolute;
-    z-index: 1000;
-    top: 150px;
-    background: white;
-    width: 106%;
-    margin-left: -4em;
-    padding: 20px;">
-    <i class="em em-star"></i>https://github.com/mobxjs/mobx-state-tree<i class="em em-star"></i>
-</div>
-
-.background[
-![img](img/tree-hug.jpg)
+.inline_block[
+1. Snapshots
+2. Patches
+3. Action middleware
 ]
 
+---
+
+# Taking a *
+
+```javascript
+    .actions(self => {
+        function takeA____() {
+            self.toilet.donate()
+            self.wipe() // <- Don't want to get stuck here...
+            self.wipe()
+            self.toilet.flush()
+        }
+
+        return {
+            takeA____
+        }
+    })
+```
+
+---
+
+
+# Taking a *
+
+```javascript
+    .actions(self => {
+        function takeA____() {
+            self.toilet.donate()
+            self.wipe() // <- Don't want to get stuck here...
+            self.wipe()
+            self.toilet.flush()
+        }
+
+        return {
+            takeA____ : decorate(atomic, takeA____)
+        }
+    })
+```
 
 		</textarea>
 		<script>require=(function(e,t,n){function i(n,s){if(!t[n]){if(!e[n]){var o=typeof require=="function"&&require;if(!s&&o)return o(n,!0);if(r)return r(n,!0);throw new Error("Cannot find module '"+n+"'")}var u=t[n]={exports:{}};e[n][0].call(u.exports,function(t){var r=e[n][1][t];return i(r?r:t)},u,u.exports)}return t[n].exports}var r=typeof require=="function"&&require;for(var s=0;s<n.length;s++)i(n[s]);return i})({"components/printing":[function(require,module,exports){
@@ -19819,7 +19326,7 @@ if (typeof exports === 'object') {
 		<script>var slideshow = remark.create({
     ratio: '16:9',
     highlightLanguage: 'javascript',
-    highlightStyle: 'monokai'
+    highlightStyle: 'idea'
 });
 
 function addClass(node, clazz) {

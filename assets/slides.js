@@ -1,7 +1,7 @@
 var slideshow = remark.create({
     ratio: '16:9',
     highlightLanguage: 'javascript',
-    highlightStyle: 'monokai'
+    highlightStyle: 'idea'
 });
 
 function addClass(node, clazz) {
