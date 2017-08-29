@@ -56,17 +56,24 @@ hr {
     margin-bottom: 1em;
 }
 
+.remark-code {
+    display: inline-block;
+}
+
 .remark-code, .remark-code-line {
     font-size: 22px;
 }
 
-.boring .remark-code {
-    opacity: 0.7;
+.boring .remark-code, .boring .remark-code span {
+    color: #ccc !important;
 }
 
 .remark-slide-content pre {
-    margin-top: 0.5em;
-    margin-bottom: 0.5em;
+    margin:0
+}
+
+.remark-slide-content pre code.remark-code {
+    padding:0
 }
 
 ul, ol {
@@ -247,8 +254,8 @@ div.lighten {
     margin-top: 35px;
 }
 
-.hljs-idea .hljs-tag {
-    background: white !important;
+.hljs-idea .hljs, .hljs-idea .hljs-tag {
+    background: transparent !important;
 }
 
 /**
@@ -269,4 +276,15 @@ Custom slide stuff
 .type_create img{
     max-height: 170px;
     max-width: 270px;
+}
+
+.timeline .remark-code .remark-code-line {
+    font-size: 35px;
+}
+
+.timeline .timeline_bottom {
+    background: #E3E3E3;
+    width: 1210px;
+    margin-left: -80px;
+    padding: 40px 80px;
 }

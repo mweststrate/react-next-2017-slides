@@ -2,7 +2,7 @@
 <html>
 	<head>
 		<meta charset="utf-8" />
-		<title>React, but for data</title>
+		<title>]</title>
 		<style>
 			@import url('https://fonts.googleapis.com/css?family=Playfair+Display|Raleway|Archivo+Black');
 
@@ -62,17 +62,24 @@ hr {
     margin-bottom: 1em;
 }
 
+.remark-code {
+    display: inline-block;
+}
+
 .remark-code, .remark-code-line {
     font-size: 22px;
 }
 
-.boring .remark-code {
-    opacity: 0.7;
+.boring .remark-code, .boring .remark-code span {
+    color: #ccc !important;
 }
 
 .remark-slide-content pre {
-    margin-top: 0.5em;
-    margin-bottom: 0.5em;
+    margin:0
+}
+
+.remark-slide-content pre code.remark-code {
+    padding:0
 }
 
 ul, ol {
@@ -253,8 +260,8 @@ div.lighten {
     margin-top: 35px;
 }
 
-.hljs-idea .hljs-tag {
-    background: white !important;
+.hljs-idea .hljs, .hljs-idea .hljs-tag {
+    background: transparent !important;
 }
 
 /**
@@ -275,6 +282,17 @@ Custom slide stuff
 .type_create img{
     max-height: 170px;
     max-width: 270px;
+}
+
+.timeline .remark-code .remark-code-line {
+    font-size: 35px;
+}
+
+.timeline .timeline_bottom {
+    background: #E3E3E3;
+    width: 1210px;
+    margin-left: -80px;
+    padding: 40px 80px;
 }
 		</style>
 		<link href="https://afeld.github.io/emoji-css/emoji.css" rel="stylesheet">
@@ -351,6 +369,34 @@ const Bathroom = () =>
 
 ---
 
+# React: declarative composition
+
+.number.bg_navy[
+  1
+]
+
+.number_column[
+```javascript
+const Toilet = observer(({ toilet }) =>
+    <div>
+        {toilet.pile.map((item, i) =>
+            <Pos top={542 - i * 150} left={780} key={i}>
+                {item.type === "🦆"
+                    ? <Duck flushing={toilet.isFlushing} />
+                    : <Sh_t flushing={toilet.isFlushing} />}
+            </Pos>
+        )}
+        <Pos top={480} left={700}>
+            <Emoji.toilet size={35} />
+        </Pos>
+        }
+    </div>
+)
+```
+]
+
+---
+
 # React: contract based
 
 .number.bg_orange[
@@ -396,7 +442,7 @@ export class Bathroom extends Component {
         this.connectToDrain()
     }
 
-    componentWillunmount() {
+    componentWillUnmount() {
         this.disconnectFromDrain()
     }
 }
@@ -475,7 +521,7 @@ class: columns
 
 ---
 
-# const tree = Type.create(data)
+# const tree = Bathroom.create(data)
 .type_create[
 <img src="img/types.svg" />
 +
@@ -490,15 +536,16 @@ Types: Actions. Local state. Type-checking.
 
 ---
 
+.inline_block[
 ```javascript
 const Sh_t = types.model({
-    type: types.literal("sh_t"),
+    type: types.literal("💩"),
     weight: 500,
     smell: 7
 })
 
 const Duck = types.model({
-    type: types.literal("duck"),
+    type: types.literal("🦆"),
     name: "Donald"
 })
 
@@ -513,9 +560,10 @@ const Bathroom = types.model({
     painting: Painting
 })
 ```
-
+]
 ---
 
+.inline_block[
 ```javascript
 const initialState = window.localStorage.getItem("bathroom")
 
@@ -526,6 +574,7 @@ ReactDOM.render(
     document.getElementById("root")
 )
 ```
+]
 
 ---
 
@@ -542,20 +591,21 @@ Actions modify node properties & local state
 
 ---
 
+.inline_block[
 ```javascript
 const Toilet = types
     .model(/* ... */)
     .actions(self => {
+
         function donate() {
             if (Duck.is(self.pile[0])) self.pile.clear()
-            self.pile.push({ type: "sh_t" })
+            self.pile.push({ type: "💩" })
         }
 
         const flush = process(function* flush() {
-            if (self.isFlushing) return
             self.isFlushing = true
             yield delay(2000)
-            self.pile = [{ type: "duck" }]
+            self.pile = [{ type: "🦆" }]
             self.isFlushing = false
         })
 
@@ -565,22 +615,16 @@ const Toilet = types
         }
     })
 ```
+]
 
 ---
 
+.inline_block[
 ```javascript
 export const Bathroom = types
     .model(/* ... */)
     .actions(self => {
-        function wipe() {
-            if (self.amountOfToiletPaper <= 0)
-                throw new Error("OutOfToiletPaperException")
-            self.amountOfToiletPaper -= 1
-        }
-
-        function restock() {
-            self.amountOfToiletPaper += 3
-        }
+        /* .. */
 
         function takeA____() {
             self.toilet.donate()
@@ -592,6 +636,7 @@ export const Bathroom = types
         return { wipe, restock, takeA____ }
     })
 ```
+]
 
 ---
 
@@ -608,6 +653,7 @@ Reactive. Immutable. Cheap. Structurally shared.
 
 ---
 
+.inline_block[
 ```javascript
 const bathroom = BathroomModel.create(initialState)
 
@@ -615,6 +661,7 @@ onSnapshot(bathroom, snapshot => {
     window.localStorage.setItem("bathroom", JSON.stringify(snapshot))
 })
 ```
+]
 
 ---
 
@@ -634,26 +681,39 @@ Reconciliation. Minimal amount of changes. Preserve state.
 
 ---
 
+# Lifecycle & dependency injection
+
+.inline_block[
+.boring[
 ```javascript
-const Toilet = types
-    .actions(self => {
-        const drain = getEnv(self).drain
+const Toilet = types.actions(self => {
+```
+]
+```
 
-        function postCreate() {
-            drain.connect()
-        }
+    const { drain } = getEnv(self)
 
-        function beforeDestroy() {
-            drain.disconnect()
-        }
+    function postCreate() {
+        drain.connect()
+    }
 
-        return {
-            beforeDestroy, postCreate
-        }
-    })
+    function beforeDestroy() {
+        drain.disconnect()
+    }
+
+```
+.boring[
+```
+
+    return { beforeDestroy, postCreate }
+})
+```
+]
+```
 
 const bathroom = Bathroom.create(data, { drain: somedrain })
 ```
+]
 
 ---
 
@@ -675,23 +735,44 @@ const bathroom = Bathroom.create(data, { drain: somedrain })
 ---
 <!-- 10_reasoning.md-->
 
-# 3 ways to reason about what is happening with data
+# 3 ways to reason about what is happening with state
 
 .inline_block[
 1. Snapshots
-2. Patches
 3. Action middleware
+2. Patches
 ]
 
 ---
 
-# Taking a *
+# JSON Patch
 
+.inline_block[
+```
+{ op: "add", path: "/toilet/pile/0", value: {
+    smell: 7,
+    type: "💩",
+    weight: 500
+} }
+```
+
+1. Fine grained observability
+2. Reversable
+3. RFC-6902
+]
+
+---
+
+# Taking a 💩 atomically
+
+---
+
+.inline_block[
 ```javascript
     .actions(self => {
         function takeA____() {
             self.toilet.donate()
-            self.wipe() // <- Don't want to get stuck here...
+            self.wipe() // 💥 <- Don't want to get stuck here...
             self.wipe()
             self.toilet.flush()
         }
@@ -701,26 +782,399 @@ const bathroom = Bathroom.create(data, { drain: somedrain })
         }
     })
 ```
+]
+
+
+.appear[
+    <img src="img/np1.jpg" style="position: fixed;width: 100%;height: 100%;top: 0px;left: 0px;" />
+]
 
 ---
 
-
-# Taking a *
-
+.inline_block[
+.boring[
 ```javascript
     .actions(self => {
         function takeA____() {
             self.toilet.donate()
-            self.wipe() // <- Don't want to get stuck here...
+            self.wipe() // 💥 <- Don't want to get stuck here...
             self.wipe()
             self.toilet.flush()
         }
+```
+]
+
+```
+
+        return {
+            takeA____ : decorate(atomic, takeA____)
+        }
+```
+.boring[
+```
+    })
+```
+]]
+
+---
+
+class: timeline
+
+```
+[💩📃📃💦]
+```
+.appear[
+```
+     💥
+     OutOfToiletPaperException
+```
+<br/>
+]
+.timeline_bottom.appear[
+```
+Rewind:
+👇
+[💩📃📃💦]
+```
+]
+
+---
+
+.inline_block[
+```javascript
+export function atomic(call, next) {
+
+    // record a preState
+    const preState = getSnapshot(call.context)
+    try {
+        return next(call)
+    } catch (e) {
+
+        // exception: restore snapshot..
+        applySnapshot(call.context, preState)
+
+        // ..and rethrow
+        throw e
+    }
+}
+```
+]
+
+---
+
+# Be a good citizen...
+
+---
+
+class: fullscreenw
+
+<img src="img/clean.jpg" />
+
+---
+
+<div style="display:inline-block">
+.boring[
+```javascript
+    .actions(self => {
+```
+]
+
+```
+
+        const takeA____ = process(function*() {
+            self.toilet.donate()
+            self.wipe()
+            self.wipe()
+            yield self.toilet.flush()
+            self.wipe() // ..clean the seat
+            self.wipe() // might 💥
+        })
+```
+
+.boring[
+```
 
         return {
             takeA____ : decorate(atomic, takeA____)
         }
     })
 ```
+]
+</div>
+
+---
+
+class: timeline
+
+```
+[💩📃📃💦]                      [🦆📃📃]
+                                   💥
+                OutOfToiletPaperException
+```
+<br/>
+.timeline_bottom.appear[
+```
+Rewind:
+👇
+[💩📃📃💦]                      [🦆📃📃]
+```
+]
+
+---
+
+.inline_block[
+
+```javascript
+const runningActions = new Map()
+```
+
+.boring[
+```javascript
+
+export function atomic(call, next) {
+    switch (call.type) {
+        case "action":
+            return atomic(call, next)
+```
+]
+
+```javascript
+        case "process_spawn":
+            runningActions.set(call.id, getSnapshot(call.context))
+            break
+        case "process_throw":
+            applySnapshot(call.context, runningActions.get(call.id))
+```
+.boring[
+```
+            runningActions.delete(call.id)
+            break
+        case "process_return":
+            runningActions.delete(call.id)
+            break
+    }
+    return next(call)
+}
+```
+]
+]
+---
+<!-- 12_async1.md-->
+
+---
+
+class: timeline
+
+```
+[💩📃📃💦]      [🖼]    [🖼]    [🦆📃📃]
+                                  💥
+                OutOfToiletPaperException
+```
+<br/>
+
+.timeline_bottom.appear[
+```
+Rewind:
+👇
+[💩📃📃💦]      [🖼]    [🖼]    [🦆📃📃]
+```
+.appear[
+```
+                👆      👆
+                  LOST!
+```
+]
+]
+
+---
+
+# Snapshots are too naive for time travelling...
+
+---
+
+# Proper rewinding of changes
+
+1. Record patches (diffs) and revert them
+1. Record start state, rewind, replay all other actions
+
+---
+
+Mendix Undo / redo
+
+---
+
+# Record patches & reverse apply
+
+---
+
+class: timeline
+
+```
+spawn #1                       resume #1
+|                              |
+[💩📃📃💦]   [🖼]    [🖼] [🖼]   [🦆📃📃]
+                                  💥
++------+                       +-----+ 🔴 patches
+
+```
+<br/>
+.timeline_bottom.appear[
+```
+Reverse apply:
+
+[💩📃📃💦]   [🖼]    [🖼] [🖼]   [🦆📃📃]
+[💩📃📃💦]                      [🦆📃📃] -
+______________________________________ =
+            [🖼]    [🖼] [🖼]
+```
+]
+
+---
+
+```javascript
+        case "process_spawn": {
+            const recorder = recordPatches(call.context)
+            runningActions.set(call.rootId, recorder)
+            break
+        }
+        case "process_yield":
+        case "process_yield_error": {
+            const recorder = runningActions.get(call.rootId)
+            try {
+                recorder.resume()
+                return next(call)
+            } finally {
+                recorder.stop()
+            }
+        }
+        case "process_throw":
+            runningActions.get(call.rootId).undo()
+            break
+```
+
+---
+
+# Record actions & replay
+
+---
+
+class: timeline
+
+```
+🔴 act #1   #2      #3  #4     resume #1
+|           |       |   |      |
+[💩📃📃💦]   [🖼]    [🖼] [🖼]   [🦆📃📃]
+                                 💥
+```
+<br/>
+.timeline_bottom.appear[
+```
+Rewind & replay
+
+👇
+[💩📃📃💦]   [🖼]    [🖼] [🖼]   [🦆📃📃]
+
+▶
+            [🖼]    [🖼] [🖼]
+```
+]
+
+---
+
+.inline_block[
+```javascript
+const history = [] // { id, snapshot, call }[]
+
+function atomic(call, next) {
+
+    // record every 'root' action
+    if (call.id === call.rootId) {
+        history.push({
+            id: call.id,
+            snapshot: getSnapshot(call.context),
+            call
+        })
+    }
+
+    // ...
+}
+```
+]
+
+---
+
+<div style="display:inline-block">
+.boring[
+```javascript
+function atomic(call, next) {
+    // ...
+    switch (call.type) {
+```
+]
+
+```
+        case "process_throw":
+            // find root call
+            const idx = history.findIndex(item => item.id === call.rootId)
+
+            // restore 'zero' state
+            applySnapshot(history[idx].call.context, history[idx].snapshot)
+
+            // replay all later action invocations
+            history.splice(idx).slice(1).forEach(item => {
+                item.call.context[item.call.name].apply(null, item.call.args)
+            })
+```
+
+.boring[
+```
+    }
+}
+```
+]
+</div>
+
+---
+<!-- 20_outro.md-->
+
+
+# Patches, middleware & snapshots
+
+Primitives to address cross cutting concerns in a generic way
+
+---
+
+# Patches, middleware & snapshots
+
+.inline_block[
+* Logging
+* Time travelling
+* Atomic updates
+* Optimistic updates
+* Undo / Redo
+* Operational Transformation
+]
+
+---
+
+<img src="img/logo.png" style="height:80px"/>
+
+# Mobx-state-tree
+
+.inline_block[
+* Declarative, composable models
+* Tools for powerful abstractions
+]
+
+---
+
+<img src="img/logo.png" style="height:80px"/>
+
+# Mobx-state-tree
+
+It's React, but for data
+
+@mweststrate - Mendix
 
 		</textarea>
 		<script>require=(function(e,t,n){function i(n,s){if(!t[n]){if(!e[n]){var o=typeof require=="function"&&require;if(!s&&o)return o(n,!0);if(r)return r(n,!0);throw new Error("Cannot find module '"+n+"'")}var u=t[n]={exports:{}};e[n][0].call(u.exports,function(t){var r=e[n][1][t];return i(r?r:t)},u,u.exports)}return t[n].exports}var r=typeof require=="function"&&require;for(var s=0;s<n.length;s++)i(n[s]);return i})({"components/printing":[function(require,module,exports){

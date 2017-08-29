@@ -22,7 +22,7 @@ class: columns
 
 ---
 
-# const tree = Type.create(data)
+# const tree = Bathroom.create(data)
 .type_create[
 <img src="img/types.svg" />
 +
@@ -37,15 +37,16 @@ Types: Actions. Local state. Type-checking.
 
 ---
 
+.inline_block[
 ```javascript
 const Sh_t = types.model({
-    type: types.literal("sh_t"),
+    type: types.literal("💩"),
     weight: 500,
     smell: 7
 })
 
 const Duck = types.model({
-    type: types.literal("duck"),
+    type: types.literal("🦆"),
     name: "Donald"
 })
 
@@ -60,9 +61,10 @@ const Bathroom = types.model({
     painting: Painting
 })
 ```
-
+]
 ---
 
+.inline_block[
 ```javascript
 const initialState = window.localStorage.getItem("bathroom")
 
@@ -73,6 +75,7 @@ ReactDOM.render(
     document.getElementById("root")
 )
 ```
+]
 
 ---
 
@@ -89,20 +92,21 @@ Actions modify node properties & local state
 
 ---
 
+.inline_block[
 ```javascript
 const Toilet = types
     .model(/* ... */)
     .actions(self => {
+
         function donate() {
             if (Duck.is(self.pile[0])) self.pile.clear()
-            self.pile.push({ type: "sh_t" })
+            self.pile.push({ type: "💩" })
         }
 
         const flush = process(function* flush() {
-            if (self.isFlushing) return
             self.isFlushing = true
             yield delay(2000)
-            self.pile = [{ type: "duck" }]
+            self.pile = [{ type: "🦆" }]
             self.isFlushing = false
         })
 
@@ -112,22 +116,16 @@ const Toilet = types
         }
     })
 ```
+]
 
 ---
 
+.inline_block[
 ```javascript
 export const Bathroom = types
     .model(/* ... */)
     .actions(self => {
-        function wipe() {
-            if (self.amountOfToiletPaper <= 0)
-                throw new Error("OutOfToiletPaperException")
-            self.amountOfToiletPaper -= 1
-        }
-
-        function restock() {
-            self.amountOfToiletPaper += 3
-        }
+        /* .. */
 
         function takeA____() {
             self.toilet.donate()
@@ -139,6 +137,7 @@ export const Bathroom = types
         return { wipe, restock, takeA____ }
     })
 ```
+]
 
 ---
 
@@ -155,6 +154,7 @@ Reactive. Immutable. Cheap. Structurally shared.
 
 ---
 
+.inline_block[
 ```javascript
 const bathroom = BathroomModel.create(initialState)
 
@@ -162,6 +162,7 @@ onSnapshot(bathroom, snapshot => {
     window.localStorage.setItem("bathroom", JSON.stringify(snapshot))
 })
 ```
+]
 
 ---
 
@@ -181,26 +182,39 @@ Reconciliation. Minimal amount of changes. Preserve state.
 
 ---
 
+# Lifecycle & dependency injection
+
+.inline_block[
+.boring[
 ```javascript
-const Toilet = types
-    .actions(self => {
-        const drain = getEnv(self).drain
+const Toilet = types.actions(self => {
+```
+]
+```
 
-        function postCreate() {
-            drain.connect()
-        }
+    const { drain } = getEnv(self)
 
-        function beforeDestroy() {
-            drain.disconnect()
-        }
+    function postCreate() {
+        drain.connect()
+    }
 
-        return {
-            beforeDestroy, postCreate
-        }
-    })
+    function beforeDestroy() {
+        drain.disconnect()
+    }
+
+```
+.boring[
+```
+
+    return { beforeDestroy, postCreate }
+})
+```
+]
+```
 
 const bathroom = Bathroom.create(data, { drain: somedrain })
 ```
+]
 
 ---
 

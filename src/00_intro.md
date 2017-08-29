@@ -66,6 +66,34 @@ const Bathroom = () =>
 
 ---
 
+# React: declarative composition
+
+.number.bg_navy[
+  1
+]
+
+.number_column[
+```javascript
+const Toilet = observer(({ toilet }) =>
+    <div>
+        {toilet.pile.map((item, i) =>
+            <Pos top={542 - i * 150} left={780} key={i}>
+                {item.type === "🦆"
+                    ? <Duck flushing={toilet.isFlushing} />
+                    : <Sh_t flushing={toilet.isFlushing} />}
+            </Pos>
+        )}
+        <Pos top={480} left={700}>
+            <Emoji.toilet size={35} />
+        </Pos>
+        }
+    </div>
+)
+```
+]
+
+---
+
 # React: contract based
 
 .number.bg_orange[
@@ -111,7 +139,7 @@ export class Bathroom extends Component {
         this.connectToDrain()
     }
 
-    componentWillunmount() {
+    componentWillUnmount() {
         this.disconnectFromDrain()
     }
 }
