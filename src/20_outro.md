@@ -13,7 +13,6 @@ Primitives to address cross cutting concerns in a generic way
 * Atomic updates
 * Optimistic updates
 * Undo / Redo
-* Operational Transformation
 ]
 
 ---
@@ -23,8 +22,8 @@ Primitives to address cross cutting concerns in a generic way
 # Mobx-state-tree
 
 .inline_block[
-* Declarative, composable models
-* Tools for powerful abstractions
+* Declarative, composable data models
+* Provides tools for powerful generic abstractions
 ]
 
 ---

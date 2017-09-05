@@ -69,8 +69,8 @@ const Toilet = observer(({ toilet }) =>
     <div>
         {toilet.pile.map((item, i) =>
             item.type === "🦆"
-                ? <Duck rotating={toilet.isFlushing} />
-                : <Sh_t rotating={toilet.isFlushing} />
+                ? <Duck />
+                : <Sh_t />
         )}
         <Pos top={480} left={700}>
             <Emoji.toilet size={35} />
@@ -91,7 +91,6 @@ const Toilet = observer(({ toilet }) =>
 .number_column[
 ```javascript
 const Duck = types.model({
-    type: types.literal("🦆"),
     name: types.string
 })
 ```
@@ -100,7 +99,6 @@ const Duck = types.model({
 ```javascript
 
 const Sh_t = types.model({
-    type: types.literal("💩"),
     weight: 500,
     smell: 7
 })
@@ -236,7 +234,7 @@ const snapshot = getSnapshot(tree)
 .inline_block[
 
 ```javascript
-const initialState = window.localStorage.getItem("bathroom")
+const initialState = window.localStorage.getItem(JSON.parse("bathroom"))
 
 const bathroom = BathroomModel.create(initialState)
 ```

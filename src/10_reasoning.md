@@ -218,10 +218,6 @@ function fullVisit() {
 
 ---
 
-# Asynchronous processes in MST
-
----
-
 .inline_block[
 ```javascript
 async function fullVisit() {
@@ -239,6 +235,10 @@ async function fullVisit() {
 Nope!
 ]
 ]
+
+---
+
+# Asynchronous processes in MST
 
 ---
 
