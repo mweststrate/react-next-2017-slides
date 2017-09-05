@@ -33,18 +33,11 @@ Michel Weststrate - @mweststrate
 
 ---
 
-
-class: fullscreen
-
-![tree](img/bathroom.jpg)
+Why I <i class="em em-heart"></i> React
 
 ---
 
-I <i class="em em-heart"></i> React
-
----
-
-# React: declarative composition
+# React: composes components
 
 .number.bg_navy[
   1
@@ -54,8 +47,6 @@ I <i class="em em-heart"></i> React
 ```javascript
 const Bathroom = () =>
     <div className="Bathroom">
-        <BathroomIcon />
-        <FlushingIcon />
         <Painting />
         <Buttons />
         <ToiletPaper />
@@ -66,7 +57,7 @@ const Bathroom = () =>
 
 ---
 
-# React: declarative composition
+# React: composes components
 
 .number.bg_navy[
   1
@@ -77,19 +68,197 @@ const Bathroom = () =>
 const Toilet = observer(({ toilet }) =>
     <div>
         {toilet.pile.map((item, i) =>
-            <Pos top={542 - i * 150} left={780} key={i}>
-                {item.type === "🦆"
-                    ? <Duck rotating={toilet.isFlushing} />
-                    : <Sh_t rotating={toilet.isFlushing} />}
-            </Pos>
+            item.type === "🦆"
+                ? <Duck rotating={toilet.isFlushing} />
+                : <Sh_t rotating={toilet.isFlushing} />
         )}
         <Pos top={480} left={700}>
             <Emoji.toilet size={35} />
         </Pos>
-        }
     </div>
 )
 ```
+]
+
+---
+
+# MST: composes types
+
+.number.bg_navy[
+  1
+]
+
+.number_column[
+```javascript
+const Duck = types.model({
+    type: types.literal("🦆"),
+    name: types.string
+})
+```
+
+.appear[
+```javascript
+
+const Sh_t = types.model({
+    type: types.literal("💩"),
+    weight: 500,
+    smell: 7
+})
+```
+]
+]
+
+---
+
+# MST: composes types
+
+.number.bg_navy[
+  1
+]
+
+.number_column[
+```javascript
+const Toilet = types.model({
+    isFlushing: false,
+    pile: types.array(types.union(Sh_t, Duck))
+})
+```
+
+.appear[
+```javascript
+
+const Bathroom = types.model({
+    amountOfToiletPaper: 0,
+    toilet: Toilet,
+    painting: Painting
+})
+```
+]
+]
+
+---
+
+class: columns
+
+.left[
+<img src="img/json.svg" width="100%" />
+<br/>
+<br/>
+<center>Snapshots: Raw data</center>
+]
+
+.right[
+<center><img src="img/types.svg" height="300px" /></center>
+<br/>
+<br/>
+<center>Types: Data models</center>
+]
+
+---
+
+.inline_block[
+```javascript
+const snapshot = {
+    amountOfToiletPaper: 1,
+    isRelaxing: false,
+    toilet: {
+        isFlushing: false,
+        pile: [{ type: "💩", weight: 365, smell: 7 }],
+        processed: 14145
+    },
+    painting: { painting: "🖼", anchor: { x: 264, y: 652 } }
+}
+```
+]
+
+---
+
+# Constructing the state tree
+
+.type_create[
+<img src="img/types.svg" />
++
+<img src="img/json.svg" />
+=
+<img src="img/mst_tree.svg" />
+]
+
+.inline_block[
+```
+const tree = Bathroom.create(snapshot)
+```
+]
+
+---
+
+.center[
+<img src="img/react.svg" width="50" /><br/>
+React composes a tree of component intances
+
+.inline_block[
+```
+const instance = React.createElement(Component, props)
+```
+]
+
+<br/>
+<br/>
+<img src="img/logo.png" width="50" /><br/>
+
+MST composes a tree of rich type instances
+.inline_block[
+```
+const instance = Type.create(snapshot)
+```
+]
+]
+
+---
+
+
+# Getting the "props" out
+
+.type_create[
+<img src="img/mst_tree_2.svg" />
+&rarr;
+<img src="img/json_2.svg" />
+]
+
+
+.inline_block[
+```
+const snapshot = getSnapshot(tree)
+```
+]
+
+---
+
+.inline_block[
+
+```javascript
+const initialState = window.localStorage.getItem("bathroom")
+
+const bathroom = BathroomModel.create(initialState)
+```
+
+.appear[
+```
+
+ReactDOM.render(
+    <Bathroom bathroom={bathroom} />,
+    document.getElementById("root")
+)
+```
+]
+
+.appear[
+```
+
+onSnapshot(bathroom, snapshot => {
+    window.localStorage.setItem("bathroom", JSON.stringify(snapshot))
+})
+```
+]
 ]
 
 ---
@@ -103,28 +272,69 @@ const Toilet = observer(({ toilet }) =>
 .number_column[
 1. Only props are exposed
 1. Internal state encapsulated
-1. Runtime type checking
+1. Design- & runtime type checking
 ]
 ---
 
-# React: contract based
+# MST: contract based
 
 .number.bg_orange[
   2
 ]
 
 .number_column[
-```javascript
-export class Bathroom extends Component {
-    static.propTypes = {
-        drain: PropTypes.object,
-        electricity: PropTypes.object
-    }
-}
+1. Define which props, views and actions are exposed
+1. Internal state encapsulated
+1. Design- & runtime type checking
+]
+
+---
+
+.inline_block[
+```
+const Bathroom = types
+    .model(/* props */)
+    .actions(self => {
+
+        /* local state & actions */
+        let restockFactor = 4
+
+        function wipe() {
+            self.amountOfToiletPaper -= 1
+        }
+
+        function restock() {
+            self.amountOfToiletPaper += restockFactor
+        }
+
+        /* exposed actions */
+        return { wipe, restock }
+    })
 ```
 ]
 
 ---
+
+.inline_block[
+```
+const bathroom = Bathroom.create(snapshot)
+
+bathroom.restock()
+```
+]
+
+---
+
+Calling an action transitions the tree to a next state
+
+.type_create[
+<img src="img/mst_tree.svg" />
+&rarr;
+<img src="img/mst_tree_2.svg" />
+]
+
+---
+
 
 # React: explicit lifecycle
 
@@ -166,6 +376,43 @@ class Lightbulb extends React.Component {
 
 ---
 
+# MST: lifecycle & dependency injection
+
+
+.inline_block[
+.boring[
+```javascript
+const Toilet = types.actions(self => {
+```
+]
+```
+
+    const { drain } = getEnv(self)
+
+    function postCreate() {
+        drain.connect()
+    }
+
+    function beforeDestroy() {
+        drain.disconnect()
+    }
+
+```
+.boring[
+```
+
+    return { beforeDestroy, postCreate }
+})
+```
+]
+```
+
+const bathroom = Bathroom.create(data, { drain: somedrain })
+```
+]
+
+---
+
 # React: instance reconciliation
 
 .number.bg_red[
@@ -182,12 +429,50 @@ class Lightbulb extends React.Component {
 
 ---
 
-# React: control & flexibility
+# MST: instance reconciliation
+
+.type_create[
+<img src="img/mst_tree.svg" />
++
+<img src="img/json_2.svg" />
+&rarr;
+<img src="img/mst_tree_2.svg" />
+]
 
 .inline_block[
-1. Declarative
-2. Internal state hidden, type-checked api
-3. Model lifecycle
-4. Dependency injection
-5. Preserve internal state
+```
+applySnapshot(bathroom, someNewSnapshot)
+```
 ]
+
+---
+
+class: columns
+
+# It's React, but for data
+
+.left[
+<center>
+<img src="img/react.svg" width="50" /><br/>
+Component<br/>
+Props<br/>
+State<br/>
+Instance<br/>
+Context<br/>
+Reconciliation<br/>
+</center>
+]
+
+.right[
+<center>
+<img src="img/logo.png" width="50" /><br/>
+Type<br/>
+Snapshot<br/>
+Volatile state<br/>
+Instance<br/>
+Environment<br/>
+Reconciliation<br/>
+</center>
+]
+
+

@@ -2,7 +2,7 @@
 <html>
 	<head>
 		<meta charset="utf-8" />
-		<title>]</title>
+		<title>Patches, middleware &amp; snapshots</title>
 		<style>
 			@import url('https://fonts.googleapis.com/css?family=Playfair+Display|Raleway|Archivo+Black');
 
@@ -264,6 +264,10 @@ div.lighten {
     background: transparent !important;
 }
 
+.center{
+    text-align: center;
+}
+
 /**
 Custom slide stuff
 */
@@ -336,18 +340,11 @@ Michel Weststrate - @mweststrate
 
 ---
 
-
-class: fullscreen
-
-![tree](img/bathroom.jpg)
+Why I <i class="em em-heart"></i> React
 
 ---
 
-I <i class="em em-heart"></i> React
-
----
-
-# React: declarative composition
+# React: composes components
 
 .number.bg_navy[
   1
@@ -357,8 +354,6 @@ I <i class="em em-heart"></i> React
 ```javascript
 const Bathroom = () =>
     <div className="Bathroom">
-        <BathroomIcon />
-        <FlushingIcon />
         <Painting />
         <Buttons />
         <ToiletPaper />
@@ -369,7 +364,7 @@ const Bathroom = () =>
 
 ---
 
-# React: declarative composition
+# React: composes components
 
 .number.bg_navy[
   1
@@ -380,19 +375,197 @@ const Bathroom = () =>
 const Toilet = observer(({ toilet }) =>
     <div>
         {toilet.pile.map((item, i) =>
-            <Pos top={542 - i * 150} left={780} key={i}>
-                {item.type === "🦆"
-                    ? <Duck rotating={toilet.isFlushing} />
-                    : <Sh_t rotating={toilet.isFlushing} />}
-            </Pos>
+            item.type === "🦆"
+                ? <Duck rotating={toilet.isFlushing} />
+                : <Sh_t rotating={toilet.isFlushing} />
         )}
         <Pos top={480} left={700}>
             <Emoji.toilet size={35} />
         </Pos>
-        }
     </div>
 )
 ```
+]
+
+---
+
+# MST: composes types
+
+.number.bg_navy[
+  1
+]
+
+.number_column[
+```javascript
+const Duck = types.model({
+    type: types.literal("🦆"),
+    name: types.string
+})
+```
+
+.appear[
+```javascript
+
+const Sh_t = types.model({
+    type: types.literal("💩"),
+    weight: 500,
+    smell: 7
+})
+```
+]
+]
+
+---
+
+# MST: composes types
+
+.number.bg_navy[
+  1
+]
+
+.number_column[
+```javascript
+const Toilet = types.model({
+    isFlushing: false,
+    pile: types.array(types.union(Sh_t, Duck))
+})
+```
+
+.appear[
+```javascript
+
+const Bathroom = types.model({
+    amountOfToiletPaper: 0,
+    toilet: Toilet,
+    painting: Painting
+})
+```
+]
+]
+
+---
+
+class: columns
+
+.left[
+<img src="img/json.svg" width="100%" />
+<br/>
+<br/>
+<center>Snapshots: Raw data</center>
+]
+
+.right[
+<center><img src="img/types.svg" height="300px" /></center>
+<br/>
+<br/>
+<center>Types: Data models</center>
+]
+
+---
+
+.inline_block[
+```javascript
+const snapshot = {
+    amountOfToiletPaper: 1,
+    isRelaxing: false,
+    toilet: {
+        isFlushing: false,
+        pile: [{ type: "💩", weight: 365, smell: 7 }],
+        processed: 14145
+    },
+    painting: { painting: "🖼", anchor: { x: 264, y: 652 } }
+}
+```
+]
+
+---
+
+# Constructing the state tree
+
+.type_create[
+<img src="img/types.svg" />
++
+<img src="img/json.svg" />
+=
+<img src="img/mst_tree.svg" />
+]
+
+.inline_block[
+```
+const tree = Bathroom.create(snapshot)
+```
+]
+
+---
+
+.center[
+<img src="img/react.svg" width="50" /><br/>
+React composes a tree of component intances
+
+.inline_block[
+```
+const instance = React.createElement(Component, props)
+```
+]
+
+<br/>
+<br/>
+<img src="img/logo.png" width="50" /><br/>
+
+MST composes a tree of rich type instances
+.inline_block[
+```
+const instance = Type.create(snapshot)
+```
+]
+]
+
+---
+
+
+# Getting the "props" out
+
+.type_create[
+<img src="img/mst_tree_2.svg" />
+&rarr;
+<img src="img/json_2.svg" />
+]
+
+
+.inline_block[
+```
+const snapshot = getSnapshot(tree)
+```
+]
+
+---
+
+.inline_block[
+
+```javascript
+const initialState = window.localStorage.getItem("bathroom")
+
+const bathroom = BathroomModel.create(initialState)
+```
+
+.appear[
+```
+
+ReactDOM.render(
+    <Bathroom bathroom={bathroom} />,
+    document.getElementById("root")
+)
+```
+]
+
+.appear[
+```
+
+onSnapshot(bathroom, snapshot => {
+    window.localStorage.setItem("bathroom", JSON.stringify(snapshot))
+})
+```
+]
 ]
 
 ---
@@ -406,28 +579,69 @@ const Toilet = observer(({ toilet }) =>
 .number_column[
 1. Only props are exposed
 1. Internal state encapsulated
-1. Runtime type checking
+1. Design- & runtime type checking
 ]
 ---
 
-# React: contract based
+# MST: contract based
 
 .number.bg_orange[
   2
 ]
 
 .number_column[
-```javascript
-export class Bathroom extends Component {
-    static.propTypes = {
-        drain: PropTypes.object,
-        electricity: PropTypes.object
-    }
-}
+1. Define which props, views and actions are exposed
+1. Internal state encapsulated
+1. Design- & runtime type checking
+]
+
+---
+
+.inline_block[
+```
+const Bathroom = types
+    .model(/* props */)
+    .actions(self => {
+
+        /* local state & actions */
+        let restockFactor = 4
+
+        function wipe() {
+            self.amountOfToiletPaper -= 1
+        }
+
+        function restock() {
+            self.amountOfToiletPaper += restockFactor
+        }
+
+        /* exposed actions */
+        return { wipe, restock }
+    })
 ```
 ]
 
 ---
+
+.inline_block[
+```
+const bathroom = Bathroom.create(snapshot)
+
+bathroom.restock()
+```
+]
+
+---
+
+Calling an action transitions the tree to a next state
+
+.type_create[
+<img src="img/mst_tree.svg" />
+&rarr;
+<img src="img/mst_tree_2.svg" />
+]
+
+---
+
 
 # React: explicit lifecycle
 
@@ -469,235 +683,8 @@ class Lightbulb extends React.Component {
 
 ---
 
-# React: instance reconciliation
+# MST: lifecycle & dependency injection
 
-.number.bg_red[
-  5
-]
-
-.number_column[
-1. Performance
-2. Preserve internal state<br/ ><input value="Test" style="margin-left: 7px;
-    padding: 5px;
-    font-size: 16px;
-    border: 2px solid #ccc;" />
-]
-
----
-
-# React: control & flexibility
-
-.inline_block[
-1. Declarative
-2. Internal state hidden, type-checked api
-3. Model lifecycle
-4. Dependency injection
-5. Preserve internal state
-]
----
-<!-- 05_mst_overview.md-->
-
-<img src="img/logo.png" style="height:200px"/>
-
-# Mobx-State-Tree
-
----
-
-class: columns
-
-.left[
-<center>Snapshots: Raw data</center>
-<br/>
-<br/>
-<img src="img/json.svg" width="100%" />
-]
-
-.right[
-<center>Types: Data models</center>
-<br/>
-<br/>
-<center><img src="img/types.svg" height="300px" /></center>
-]
-
----
-
-.inline_block[
-```javascript
-const snapshot = {
-    amountOfToiletPaper: 1,
-    isRelaxing: false,
-    toilet: {
-        isFlushing: false,
-        pile: [{ type: "💩", weight: 365, smell: 7 }],
-        processed: 14145
-    },
-    painting: { painting: "🖼", anchor: { x: 264, y: 652 } }
-}
-```
-]
-
----
-
-.inline_block[
-```javascript
-const Sh_t = types.model({
-    type: types.literal("💩"),
-    weight: 500,
-    smell: 7
-})
-
-const Duck = types.model({
-    type: types.literal("🦆"),
-    name: "Donald"
-})
-
-const Toilet = types.model({
-    isFlushing: false,
-    pile: types.array(types.union(Sh_t, Duck))
-})
-
-const Bathroom = types.model({
-    amountOfToiletPaper: 0,
-    toilet: Toilet,
-    painting: Painting
-})
-```
-]
-
----
-
-# const tree = Bathroom.create(data)
-.type_create[
-<img src="img/types.svg" />
-+
-<img src="img/json.svg" />
-=
-<img src="img/mst_tree.svg" />
-]
-
-Types define: Type-checking. Actions. Local state.
-
----
-
-.inline_block[
-```javascript
-const initialState = window.localStorage.getItem("bathroom")
-
-const bathroom = BathroomModel.create(initialState)
-
-ReactDOM.render(
-    <Bathroom bathroom={bathroom} />,
-    document.getElementById("root")
-)
-```
-]
-
----
-
-# tree.callAction()
-.type_create[
-<img src="img/mst_tree.svg" />
-&rarr;
-<img src="img/mst_tree_2.svg" />
-]
-
-.appear[
-Actions modify node properties & local state
-]
-
----
-
-.inline_block[
-```javascript
-const Toilet = types
-    .model(/* ... */)
-    .actions(self => {
-
-        function donate() {
-            if (Duck.is(self.pile[0])) self.pile.clear()
-            self.pile.push({ type: "💩" })
-        }
-
-        const flush = process(function* flush() {
-            self.isFlushing = true
-            yield delay(2000)
-            self.pile = [{ type: "🦆" }]
-            self.isFlushing = false
-        })
-
-        return {
-            donate,
-            flush
-        }
-    })
-```
-]
-
----
-
-.inline_block[
-```javascript
-export const Bathroom = types
-    .model(/* ... */)
-    .actions(self => {
-        /* .. */
-
-        function takeA____() {
-            self.toilet.donate()
-            self.wipe()
-            self.wipe()
-            self.toilet.flush()
-        }
-
-        return { wipe, restock, takeA____ }
-    })
-```
-]
-
----
-
-# const data = getSnapshot(tree)
-.type_create[
-<img src="img/mst_tree_2.svg" />
-&rarr;
-<img src="img/json_2.svg" />
-]
-
-.appear[
-Reactive. Immutable. Cheap. Structurally shared.
-]
-
----
-
-.inline_block[
-```javascript
-const bathroom = BathroomModel.create(initialState)
-
-onSnapshot(bathroom, snapshot => {
-    window.localStorage.setItem("bathroom", JSON.stringify(snapshot))
-})
-```
-]
-
----
-
-# applySnapshot(tree, data)
-
-.type_create[
-<img src="img/mst_tree.svg" />
-+
-<img src="img/json_2.svg" />
-&rarr;
-<img src="img/mst_tree_2.svg" />
-]
-
-.appear[
-Reconciliation. Minimal amount of changes. Preserve state.
-]
-
----
-
-# Lifecycle & dependency injection
 
 .inline_block[
 .boring[
@@ -733,19 +720,68 @@ const bathroom = Bathroom.create(data, { drain: somedrain })
 
 ---
 
-# MST: control & flexibility
+# React: instance reconciliation
 
-.inline_block[
-1. Declarative ✅
-2. Internal state hidden, type-checked api ✅
-3. Model lifecycle ✅
-4. Dependency injection ✅
-5. Preserve internal state ✅
+.number.bg_red[
+  5
+]
+
+.number_column[
+1. Performance
+2. Preserve internal state<br/ ><input value="Test" style="margin-left: 7px;
+    padding: 5px;
+    font-size: 16px;
+    border: 2px solid #ccc;" />
 ]
 
 ---
 
+# MST: instance reconciliation
+
+.type_create[
+<img src="img/mst_tree.svg" />
++
+<img src="img/json_2.svg" />
+&rarr;
+<img src="img/mst_tree_2.svg" />
+]
+
+.inline_block[
+```
+applySnapshot(bathroom, someNewSnapshot)
+```
+]
+
+---
+
+class: columns
+
 # It's React, but for data
+
+.left[
+<center>
+<img src="img/react.svg" width="50" /><br/>
+Component<br/>
+Props<br/>
+State<br/>
+Instance<br/>
+Context<br/>
+Reconciliation<br/>
+</center>
+]
+
+.right[
+<center>
+<img src="img/logo.png" width="50" /><br/>
+Type<br/>
+Snapshot<br/>
+Volatile state<br/>
+Instance<br/>
+Environment<br/>
+Reconciliation<br/>
+</center>
+]
+
 
 
 ---
@@ -765,14 +801,28 @@ const bathroom = Bathroom.create(data, { drain: somedrain })
 
 Immutable, structurally shared representation of entire state
 
+---
+
+# Snapshots
+
 _Like a commit in the git history: the complete state at a specific moment in time_
+
+---
+
+# JSON Patch
+
+Deltas describing updates that were applied to the tree.
 
 ---
 
 
 # JSON Patch
 
-Deltas describing updates applied to the tree.
+_Like a git patch: describes the modifications from one commit to the next_
+
+---
+
+# JSON Patch
 
 .inline_block[
 ```
@@ -782,13 +832,30 @@ Deltas describing updates applied to the tree.
     weight: 500
 } }
 ```
+]
 
+---
+
+# JSON Patch
+
+.inline_block[
 1. Fine grained observability
 2. Reversable
 3. RFC-6902
 ]
 
-_Like a git patch: describes the modifications from one commit to the next_
+
+---
+
+# Middleware
+
+Intercept action invocations
+
+---
+
+# Middleware
+
+_Like git hooks: pre- / post process specific events_
 
 ---
 
@@ -806,8 +873,7 @@ addMiddleware(tree, (call, next) => {
     return res
 })
 ```
-
-_Like git hooks: pre / post process specific events_
+]
 
 ---
 
@@ -822,7 +888,8 @@ _Like git hooks: pre / post process specific events_
 .inline_block[
 ```javascript
     .actions(self => {
-        function takeA____() {
+
+        function fullVisit() {
             self.toilet.donate()
             self.wipe() // 💥 <- Don't want to get stuck here...
             self.wipe()
@@ -830,7 +897,7 @@ _Like git hooks: pre / post process specific events_
         }
 
         return {
-            takeA____
+            fullVisit
         }
     })
 ```
@@ -842,7 +909,8 @@ _Like git hooks: pre / post process specific events_
 .boring[
 ```javascript
     .actions(self => {
-        function takeA____() {
+
+        function fullVisit() {
             self.toilet.donate()
             self.wipe() // 💥 <- Don't want to get stuck here...
             self.wipe()
@@ -854,7 +922,7 @@ _Like git hooks: pre / post process specific events_
 ```
 
         return {
-            takeA____ : decorate(atomic, takeA____)
+            fullVisit : decorate(atomic, fullVisit)
         }
 ```
 .boring[
@@ -892,13 +960,17 @@ Rewind:
 export function atomic(call, next) {
 
     // record a preState
-    const preState = getSnapshot(call.context)
+    const preState = getSnapshot(call.tree)
+
     try {
+
+        // run the action
         return next(call)
+
     } catch (e) {
 
         // exception: restore snapshot..
-        applySnapshot(call.context, preState)
+        applySnapshot(call.tree, preState)
 
         // ..and rethrow
         throw e
@@ -909,61 +981,113 @@ export function atomic(call, next) {
 
 ---
 
-# Be a good citizen...
+# More realistically
 
 ---
 
 class: fullscreenw
 
-<img src="img/clean.jpg" />
+<img src="img/gaming.jpg" />
 
 ---
 
-<div style="display:inline-block">
-.boring[
+.inline_block[
 ```javascript
-    .actions(self => {
+function fullVisit() {
+    self.toilet.donate()
+    delay(1000)
+    self.wipe()
+    delay(1000)
+    self.wipe()
+    delay(1000)
+    self.toilet.flush()
+}
 ```
 ]
 
+---
+
+# Asynchronous processes in MST
+
+---
+
+.inline_block[
+```javascript
+async function fullVisit() {
+    self.toilet.donate()
+    await delay(1000)
+    self.wipe()
+    await delay(1000)
+    self.wipe()
+    await delay(1000)
+    self.toilet.flush()
+}
 ```
 
-        const takeA____ = process(function*() {
-            self.toilet.donate()
-            self.wipe()
-            self.wipe()
-            yield self.toilet.flush()
-            self.wipe() // ..clean the seat
-            self.wipe() // might 💥
-        })
-```
+.appear[
+Nope!
+]
+]
 
-.boring[
-```
+---
 
-        return {
-            takeA____ : decorate(atomic, takeA____)
-        }
-    })
+.inline_block[
+```javascript
+const fullVisit = process(function* fullVisit() {
+    self.toilet.donate()
+    yield delay(1000)
+    self.wipe()
+    yield delay(1000)
+    self.wipe()
+    yield delay(1000)
+    self.toilet.flush()
+})
 ```
 ]
-</div>
+
+
+`async function` &rarr; `process(function* `
+
+`await` &rarr; `yield`
+
+
+---
+
+.inline_block[
+```javascript
+const fullVisit = process(function* fullVisit() {
+    self.toilet.donate()
+    yield delay(1000)
+    self.wipe()
+    yield delay(1000)
+    self.wipe() // might 💥 in some distant future...
+    yield delay(1000)
+    self.toilet.flush()
+})
+```
+]
+
+---
+
+# Generators allow intercepting continuations
+
+So we can run middleware every time the process resumes
 
 ---
 
 class: timeline
 
 ```
-[💩📃📃💦]                      [🦆📃📃]
-                                   💥
-                OutOfToiletPaperException
+[💩]           [📃]            [📃]           [💦]
+                               💥
+                   OutOfToiletPaperException
 ```
 <br/>
 .timeline_bottom.appear[
 ```
 Rewind:
 👇
-[💩📃📃💦]              📚👾🎮🕹📱📳        [🦆📃📃]
+[💩]           [📃]            [📃]           [💦]
 ```
 ]
 
@@ -972,13 +1096,13 @@ Rewind:
 .inline_block[
 
 ```javascript
-const runningActions = new Map()
+const preActionSnapshots = new Map()
 ```
 
 .boring[
 ```javascript
 
-export function atomic(call, next) {
+function atomicAsync(call, next) {
     switch (call.type) {
         case "action":
             return atomic(call, next)
@@ -986,18 +1110,28 @@ export function atomic(call, next) {
 ]
 
 ```javascript
+
         case "process_spawn":
-            runningActions.set(call.id, getSnapshot(call.context))
+            preActionSnapshots.set(call.id, getSnapshot(call.tree))
+```
+.boring[
+```javascript
             break
+```
+]
+
+```javascript
+
         case "process_throw":
-            applySnapshot(call.context, runningActions.get(call.id))
+            applySnapshot(call.tree, preActionSnapshots.get(call.id))
 ```
 .boring[
 ```
-            runningActions.delete(call.id)
+
+            preActionSnapshots.delete(call.id)
             break
         case "process_return":
-            runningActions.delete(call.id)
+            preActionSnapshots.delete(call.id)
             break
     }
     return next(call)
@@ -1008,14 +1142,16 @@ export function atomic(call, next) {
 ---
 <!-- 12_async1.md-->
 
+# Snapshots are too naive for time travelling...
+
 ---
 
 class: timeline
 
 ```
-[💩📃📃💦]      [🖼]    [🖼]    [🦆📃📃]
-                                  💥
-                OutOfToiletPaperException
+[💩]   [🖼]    [📃]    [🖼]     [📃]           [💦]
+                               💥
+                   OutOfToiletPaperException
 ```
 <br/>
 
@@ -1023,30 +1159,30 @@ class: timeline
 ```
 Rewind:
 👇
-[💩📃📃💦]      [🖼]    [🖼]    [🦆📃📃]
+[💩]   [🖼]    [📃]    [🖼]     [📃]           [💦]
 ```
 .appear[
 ```
-                👆      👆
-                  LOST!
+        👆   LOST!     👆
 ```
 ]
 ]
 
 ---
 
-# Snapshots are too naive for time travelling...
-
----
 
 # Proper rewinding of changes
 
-1. Record patches (diffs) and revert them
-1. Record start state, rewind, replay all other actions
+.inline_block[
+1. .appear[Record patches (diffs) and revert them]
+1. .appear[Record start state, rewind, replay all other actions]
+]
 
 ---
 
-Mendix Undo / redo
+# Undo / Redo at Mendix
+
+Patch based
 
 ---
 
@@ -1057,43 +1193,40 @@ Mendix Undo / redo
 class: timeline
 
 ```
-spawn #1                       resume #1
-|                              |
-[💩📃📃💦]   [🖼]    [🖼] [🖼]   [🦆📃📃]
-                                  💥
-+------+                       +-----+ 🔴 patches
+🔴 Record patches
 
+[💩]   [🖼]    [📃]    [🖼]     [📃]           [💦]
+                               💥
+^^^^          ^^^^             ^^^^          ^^^^
 ```
-<br/>
 .timeline_bottom.appear[
 ```
-Reverse apply:
+◀ Reverse apply:
 
-[💩📃📃💦]   [🖼]    [🖼] [🖼]   [🦆📃📃]
-[💩📃📃💦]                      [🦆📃📃] -
-______________________________________ =
-            [🖼]    [🖼] [🖼]
+[💩]   [🖼]    [📃]    [🖼]     [📃]           [💦]
+[💩]           [📃]             [📃]           [💦]
+_________________________________________________ -
+       [🖼]            [🖼]
 ```
 ]
 
 ---
-
 ```javascript
-        case "process_spawn": {
-            const recorder = recordPatches(call.context)
+        case "process_spawn":
+            const recorder = recordPatches(call.tree)
             runningActions.set(call.rootId, recorder)
             break
-        }
-        case "process_yield":
-        case "process_yield_error": {
+
+        case "process_resume":
+        case "process_resume_error":
             const recorder = runningActions.get(call.rootId)
+            recorder.resume()
             try {
-                recorder.resume()
                 return next(call)
             } finally {
                 recorder.stop()
             }
-        }
+
         case "process_throw":
             runningActions.get(call.rootId).undo()
             break
@@ -1101,6 +1234,34 @@ ______________________________________ =
 
 ---
 
+# Recorded patches
+
+```javascript
+[
+    { op: "add", path: "/toilet/pile/1", value:
+        { type: "💩", weight: 365, smell: 7 }
+    },
+    { op: "replace", path: "/isRelaxing", value: true },
+    { op: "replace", path: "/isRelaxing", value: false },
+    { op: "replace", path: "/amountOfToiletPaper", value: 0 }
+]
+```
+
+---
+
+# Inverse of recorded patches
+
+```javascript
+[
+    { op: "remove", path: "/toilet/pile/1" },
+    { op: "replace", path: "/isRelaxing", value: false },
+    { op: "replace", path: "/isRelaxing", value: true },
+    { op: "replace", path: "/amountOfToiletPaper", value: 1 }
+]
+```
+
+
+---
 # Record actions & replay
 
 ---
@@ -1108,21 +1269,21 @@ ______________________________________ =
 class: timeline
 
 ```
-🔴 act #1   #2      #3  #4     resume #1
-|           |       |   |      |
-[💩📃📃💦]   [🖼]    [🖼] [🖼]   [🦆📃📃]
-                                 💥
+🔴 Record action invocations
+
+[💩]   [🖼]    [📃]    [🖼]     [📃]           [💦]
+#1     #2              #3
+                                💥
 ```
-<br/>
 .timeline_bottom.appear[
 ```
-Rewind & replay
-
+⏪ Rewind & replay
 👇
-[💩📃📃💦]   [🖼]    [🖼] [🖼]   [🦆📃📃]
+[💩]   [🖼]    [📃]    [🖼]     [📃]           [💦]
 
-▶
-            [🖼]    [🖼] [🖼]
+▶ #2 #3
+
+       [🖼]           [🖼]
 ```
 ]
 
@@ -1132,13 +1293,13 @@ Rewind & replay
 ```javascript
 const history = [] // { id, snapshot, call }[]
 
-function atomic(call, next) {
+function atomicAsyncAction(call, next) {
 
     // record every 'root' action
-    if (call.id === call.rootId) {
+    if (call.parentId === 0) {
         history.push({
             id: call.id,
-            snapshot: getSnapshot(call.context),
+            snapshot: getSnapshot(call.tree),
             call
         })
     }
@@ -1153,7 +1314,7 @@ function atomic(call, next) {
 <div style="display:inline-block">
 .boring[
 ```javascript
-function atomic(call, next) {
+function atomicAsyncAction(call, next) {
     // ...
     switch (call.type) {
 ```
@@ -1161,13 +1322,14 @@ function atomic(call, next) {
 
 ```
         case "process_throw":
+
             // find root call
             const idx = history.findIndex(item => item.id === call.rootId)
 
             // restore 'zero' state
-            applySnapshot(history[idx].call.context, history[idx].snapshot)
+            applySnapshot(history[idx].call.tree, history[idx].snapshot)
 
-            // replay all later action invocations
+            // remove & replay all later action invocations
             history.splice(idx).slice(1).forEach(item => {
                 item.call.context[item.call.name].apply(null, item.call.args)
             })

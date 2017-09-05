@@ -12,14 +12,28 @@
 
 Immutable, structurally shared representation of entire state
 
+---
+
+# Snapshots
+
 _Like a commit in the git history: the complete state at a specific moment in time_
+
+---
+
+# JSON Patch
+
+Deltas describing updates that were applied to the tree.
 
 ---
 
 
 # JSON Patch
 
-Deltas describing updates applied to the tree.
+_Like a git patch: describes the modifications from one commit to the next_
+
+---
+
+# JSON Patch
 
 .inline_block[
 ```
@@ -29,13 +43,30 @@ Deltas describing updates applied to the tree.
     weight: 500
 } }
 ```
+]
 
+---
+
+# JSON Patch
+
+.inline_block[
 1. Fine grained observability
 2. Reversable
 3. RFC-6902
 ]
 
-_Like a git patch: describes the modifications from one commit to the next_
+
+---
+
+# Middleware
+
+Intercept action invocations
+
+---
+
+# Middleware
+
+_Like git hooks: pre- / post process specific events_
 
 ---
 
@@ -53,8 +84,7 @@ addMiddleware(tree, (call, next) => {
     return res
 })
 ```
-
-_Like git hooks: pre / post process specific events_
+]
 
 ---
 
@@ -69,7 +99,8 @@ _Like git hooks: pre / post process specific events_
 .inline_block[
 ```javascript
     .actions(self => {
-        function takeA____() {
+
+        function fullVisit() {
             self.toilet.donate()
             self.wipe() // 💥 <- Don't want to get stuck here...
             self.wipe()
@@ -77,7 +108,7 @@ _Like git hooks: pre / post process specific events_
         }
 
         return {
-            takeA____
+            fullVisit
         }
     })
 ```
@@ -89,7 +120,8 @@ _Like git hooks: pre / post process specific events_
 .boring[
 ```javascript
     .actions(self => {
-        function takeA____() {
+
+        function fullVisit() {
             self.toilet.donate()
             self.wipe() // 💥 <- Don't want to get stuck here...
             self.wipe()
@@ -101,7 +133,7 @@ _Like git hooks: pre / post process specific events_
 ```
 
         return {
-            takeA____ : decorate(atomic, takeA____)
+            fullVisit : decorate(atomic, fullVisit)
         }
 ```
 .boring[
@@ -139,13 +171,17 @@ Rewind:
 export function atomic(call, next) {
 
     // record a preState
-    const preState = getSnapshot(call.context)
+    const preState = getSnapshot(call.tree)
+
     try {
+
+        // run the action
         return next(call)
+
     } catch (e) {
 
         // exception: restore snapshot..
-        applySnapshot(call.context, preState)
+        applySnapshot(call.tree, preState)
 
         // ..and rethrow
         throw e
@@ -156,61 +192,113 @@ export function atomic(call, next) {
 
 ---
 
-# Be a good citizen...
+# More realistically
 
 ---
 
 class: fullscreenw
 
-<img src="img/clean.jpg" />
+<img src="img/gaming.jpg" />
 
 ---
 
-<div style="display:inline-block">
-.boring[
+.inline_block[
 ```javascript
-    .actions(self => {
+function fullVisit() {
+    self.toilet.donate()
+    delay(1000)
+    self.wipe()
+    delay(1000)
+    self.wipe()
+    delay(1000)
+    self.toilet.flush()
+}
 ```
 ]
 
+---
+
+# Asynchronous processes in MST
+
+---
+
+.inline_block[
+```javascript
+async function fullVisit() {
+    self.toilet.donate()
+    await delay(1000)
+    self.wipe()
+    await delay(1000)
+    self.wipe()
+    await delay(1000)
+    self.toilet.flush()
+}
 ```
 
-        const takeA____ = process(function*() {
-            self.toilet.donate()
-            self.wipe()
-            self.wipe()
-            yield self.toilet.flush()
-            self.wipe() // ..clean the seat
-            self.wipe() // might 💥
-        })
-```
+.appear[
+Nope!
+]
+]
 
-.boring[
-```
+---
 
-        return {
-            takeA____ : decorate(atomic, takeA____)
-        }
-    })
+.inline_block[
+```javascript
+const fullVisit = process(function* fullVisit() {
+    self.toilet.donate()
+    yield delay(1000)
+    self.wipe()
+    yield delay(1000)
+    self.wipe()
+    yield delay(1000)
+    self.toilet.flush()
+})
 ```
 ]
-</div>
+
+
+`async function` &rarr; `process(function* `
+
+`await` &rarr; `yield`
+
+
+---
+
+.inline_block[
+```javascript
+const fullVisit = process(function* fullVisit() {
+    self.toilet.donate()
+    yield delay(1000)
+    self.wipe()
+    yield delay(1000)
+    self.wipe() // might 💥 in some distant future...
+    yield delay(1000)
+    self.toilet.flush()
+})
+```
+]
+
+---
+
+# Generators allow intercepting continuations
+
+So we can run middleware every time the process resumes
 
 ---
 
 class: timeline
 
 ```
-[💩📃📃💦]                      [🦆📃📃]
-                                   💥
-                OutOfToiletPaperException
+[💩]           [📃]            [📃]           [💦]
+                               💥
+                   OutOfToiletPaperException
 ```
 <br/>
 .timeline_bottom.appear[
 ```
 Rewind:
 👇
-[💩📃📃💦]              📚👾🎮🕹📱📳        [🦆📃📃]
+[💩]           [📃]            [📃]           [💦]
 ```
 ]
 
@@ -219,13 +307,13 @@ Rewind:
 .inline_block[
 
 ```javascript
-const runningActions = new Map()
+const preActionSnapshots = new Map()
 ```
 
 .boring[
 ```javascript
 
-export function atomic(call, next) {
+function atomicAsync(call, next) {
     switch (call.type) {
         case "action":
             return atomic(call, next)
@@ -233,18 +321,28 @@ export function atomic(call, next) {
 ]
 
 ```javascript
+
         case "process_spawn":
-            runningActions.set(call.id, getSnapshot(call.context))
+            preActionSnapshots.set(call.id, getSnapshot(call.tree))
+```
+.boring[
+```javascript
             break
+```
+]
+
+```javascript
+
         case "process_throw":
-            applySnapshot(call.context, runningActions.get(call.id))
+            applySnapshot(call.tree, preActionSnapshots.get(call.id))
 ```
 .boring[
 ```
-            runningActions.delete(call.id)
+
+            preActionSnapshots.delete(call.id)
             break
         case "process_return":
-            runningActions.delete(call.id)
+            preActionSnapshots.delete(call.id)
             break
     }
     return next(call)

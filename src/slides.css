@@ -258,6 +258,10 @@ div.lighten {
     background: transparent !important;
 }
 
+.center{
+    text-align: center;
+}
+
 /**
 Custom slide stuff
 */
