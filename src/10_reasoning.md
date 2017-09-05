@@ -2,13 +2,24 @@
 
 .inline_block[
 1. Snapshots
-3. Action middleware
 2. Patches
+3. Action middleware
 ]
 
 ---
 
+# Snapshots
+
+Immutable, structurally shared representation of entire state
+
+_Like a commit in the git history: the complete state at a specific moment in time_
+
+---
+
+
 # JSON Patch
+
+Deltas describing updates applied to the tree.
 
 .inline_block[
 ```
@@ -24,9 +35,34 @@
 3. RFC-6902
 ]
 
+_Like a git patch: describes the modifications from one commit to the next_
+
+---
+
+# Middleware
+
+.inline_block[
+```
+addMiddleware(tree, (call, next) => {
+    /* some pre-processing */
+
+    // invoke next middleware
+    const res = next(call)
+
+    /* some post-processing */
+    return res
+})
+```
+
+_Like git hooks: pre / post process specific events_
+
 ---
 
 # Taking a 💩 atomically
+
+.appear[
+    <img src="img/np1.jpg" style="position: fixed;width: 100%;height: 100%;top: 0px;left: 0px;" />
+]
 
 ---
 
@@ -45,11 +81,6 @@
         }
     })
 ```
-]
-
-
-.appear[
-    <img src="img/np1.jpg" style="position: fixed;width: 100%;height: 100%;top: 0px;left: 0px;" />
 ]
 
 ---
@@ -179,7 +210,7 @@ class: timeline
 ```
 Rewind:
 👇
-[💩📃📃💦]                      [🦆📃📃]
+[💩📃📃💦]              📚👾🎮🕹📱📳        [🦆📃📃]
 ```
 ]
 

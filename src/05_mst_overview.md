@@ -22,17 +22,19 @@ class: columns
 
 ---
 
-# const tree = Bathroom.create(data)
-.type_create[
-<img src="img/types.svg" />
-+
-<img src="img/json.svg" />
-=
-<img src="img/mst_tree.svg" />
-]
-
-.appear[
-Types: Actions. Local state. Type-checking.
+.inline_block[
+```javascript
+const snapshot = {
+    amountOfToiletPaper: 1,
+    isRelaxing: false,
+    toilet: {
+        isFlushing: false,
+        pile: [{ type: "💩", weight: 365, smell: 7 }],
+        processed: 14145
+    },
+    painting: { painting: "🖼", anchor: { x: 264, y: 652 } }
+}
+```
 ]
 
 ---
@@ -62,6 +64,20 @@ const Bathroom = types.model({
 })
 ```
 ]
+
+---
+
+# const tree = Bathroom.create(data)
+.type_create[
+<img src="img/types.svg" />
++
+<img src="img/json.svg" />
+=
+<img src="img/mst_tree.svg" />
+]
+
+Types define: Type-checking. Actions. Local state.
+
 ---
 
 .inline_block[

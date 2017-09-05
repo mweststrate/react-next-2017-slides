@@ -79,8 +79,8 @@ const Toilet = observer(({ toilet }) =>
         {toilet.pile.map((item, i) =>
             <Pos top={542 - i * 150} left={780} key={i}>
                 {item.type === "🦆"
-                    ? <Duck flushing={toilet.isFlushing} />
-                    : <Sh_t flushing={toilet.isFlushing} />}
+                    ? <Duck rotating={toilet.isFlushing} />
+                    : <Sh_t rotating={toilet.isFlushing} />}
             </Pos>
         )}
         <Pos top={480} left={700}>

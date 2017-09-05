@@ -382,8 +382,8 @@ const Toilet = observer(({ toilet }) =>
         {toilet.pile.map((item, i) =>
             <Pos top={542 - i * 150} left={780} key={i}>
                 {item.type === "🦆"
-                    ? <Duck flushing={toilet.isFlushing} />
-                    : <Sh_t flushing={toilet.isFlushing} />}
+                    ? <Duck rotating={toilet.isFlushing} />
+                    : <Sh_t rotating={toilet.isFlushing} />}
             </Pos>
         )}
         <Pos top={480} left={700}>
@@ -521,17 +521,19 @@ class: columns
 
 ---
 
-# const tree = Bathroom.create(data)
-.type_create[
-<img src="img/types.svg" />
-+
-<img src="img/json.svg" />
-=
-<img src="img/mst_tree.svg" />
-]
-
-.appear[
-Types: Actions. Local state. Type-checking.
+.inline_block[
+```javascript
+const snapshot = {
+    amountOfToiletPaper: 1,
+    isRelaxing: false,
+    toilet: {
+        isFlushing: false,
+        pile: [{ type: "💩", weight: 365, smell: 7 }],
+        processed: 14145
+    },
+    painting: { painting: "🖼", anchor: { x: 264, y: 652 } }
+}
+```
 ]
 
 ---
@@ -561,6 +563,20 @@ const Bathroom = types.model({
 })
 ```
 ]
+
+---
+
+# const tree = Bathroom.create(data)
+.type_create[
+<img src="img/types.svg" />
++
+<img src="img/json.svg" />
+=
+<img src="img/mst_tree.svg" />
+]
+
+Types define: Type-checking. Actions. Local state.
+
 ---
 
 .inline_block[
@@ -739,13 +755,24 @@ const bathroom = Bathroom.create(data, { drain: somedrain })
 
 .inline_block[
 1. Snapshots
-3. Action middleware
 2. Patches
+3. Action middleware
 ]
 
 ---
 
+# Snapshots
+
+Immutable, structurally shared representation of entire state
+
+_Like a commit in the git history: the complete state at a specific moment in time_
+
+---
+
+
 # JSON Patch
+
+Deltas describing updates applied to the tree.
 
 .inline_block[
 ```
@@ -761,9 +788,34 @@ const bathroom = Bathroom.create(data, { drain: somedrain })
 3. RFC-6902
 ]
 
+_Like a git patch: describes the modifications from one commit to the next_
+
+---
+
+# Middleware
+
+.inline_block[
+```
+addMiddleware(tree, (call, next) => {
+    /* some pre-processing */
+
+    // invoke next middleware
+    const res = next(call)
+
+    /* some post-processing */
+    return res
+})
+```
+
+_Like git hooks: pre / post process specific events_
+
 ---
 
 # Taking a 💩 atomically
+
+.appear[
+    <img src="img/np1.jpg" style="position: fixed;width: 100%;height: 100%;top: 0px;left: 0px;" />
+]
 
 ---
 
@@ -782,11 +834,6 @@ const bathroom = Bathroom.create(data, { drain: somedrain })
         }
     })
 ```
-]
-
-
-.appear[
-    <img src="img/np1.jpg" style="position: fixed;width: 100%;height: 100%;top: 0px;left: 0px;" />
 ]
 
 ---
@@ -916,7 +963,7 @@ class: timeline
 ```
 Rewind:
 👇
-[💩📃📃💦]                      [🦆📃📃]
+[💩📃📃💦]              📚👾🎮🕹📱📳        [🦆📃📃]
 ```
 ]
 
