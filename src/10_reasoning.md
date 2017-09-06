@@ -136,8 +136,9 @@ addMiddleware(tree, (call, next) => {
 
 class: timeline
 
+.timeline_top[
 ```
-[💩📃📃💦]
+💩📃📃💦
 ```
 .appear[
 ```
@@ -146,11 +147,12 @@ class: timeline
 ```
 <br/>
 ]
+]
 .timeline_bottom.appear[
 ```
 Rewind:
 👇
-[💩📃📃💦]
+💩📃📃💦
 ```
 ]
 
@@ -270,23 +272,20 @@ const fullVisit = process(function* fullVisit() {
 
 ---
 
-
-
----
-
 class: timeline
 
+.timeline_top[
 ```
-[💩]           [📃]            [📃]           [💦]
-                               💥
-                   OutOfToiletPaperException
+💩           📃            📃           💦
+                           💥
+               OutOfToiletPaperException
 ```
-<br/>
+]
 .timeline_bottom.appear[
 ```
 Rewind:
 👇
-[💩]           [📃]            [📃]           [💦]
+💩           📃            📃           💦
 ```
 ]
 

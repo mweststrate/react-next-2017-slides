@@ -288,15 +288,28 @@ Custom slide stuff
     max-width: 270px;
 }
 
+.timeline{
+    margin: 0px;
+    padding:0px;
+}
+
 .timeline .remark-code .remark-code-line {
     font-size: 35px;
 }
 
-.timeline .timeline_bottom {
-    background: #E3E3E3;
+.timeline .timeline_top, .timeline .timeline_bottom {
     width: 1210px;
-    margin-left: -80px;
+    height: 350px;
     padding: 40px 80px;
+    box-sizing: border-box
+}
+
+.timeline .timeline_bottom {
+    background: #1780b9;
+}
+
+.timeline .timeline_bottom .remark-code-line {
+    color: white !important;
 }
 		</style>
 		<link href="https://afeld.github.io/emoji-css/emoji.css" rel="stylesheet">
@@ -909,8 +922,9 @@ addMiddleware(tree, (call, next) => {
 
 class: timeline
 
+.timeline_top[
 ```
-[💩📃📃💦]
+💩📃📃💦
 ```
 .appear[
 ```
@@ -919,11 +933,12 @@ class: timeline
 ```
 <br/>
 ]
+]
 .timeline_bottom.appear[
 ```
 Rewind:
 👇
-[💩📃📃💦]
+💩📃📃💦
 ```
 ]
 
@@ -1043,23 +1058,20 @@ const fullVisit = process(function* fullVisit() {
 
 ---
 
-
-
----
-
 class: timeline
 
+.timeline_top[
 ```
-[💩]           [📃]            [📃]           [💦]
-                               💥
-                   OutOfToiletPaperException
+💩           📃            📃           💦
+                           💥
+               OutOfToiletPaperException
 ```
-<br/>
+]
 .timeline_bottom.appear[
 ```
 Rewind:
 👇
-[💩]           [📃]            [📃]           [💦]
+💩           📃            📃           💦
 ```
 ]
 
@@ -1120,22 +1132,22 @@ function atomicAsync(call, next) {
 
 class: timeline
 
+.timeline_top[
 ```
-[💩]   [🖼]    [📃]    [🖼]     [📃]           [💦]
-                               💥
-                   OutOfToiletPaperException
+💩   🖼    📃    🖼     📃           💦
+                       💥
+             OutOfToiletPaperException
 ```
-<br/>
-
+]
 .timeline_bottom.appear[
 ```
 Rewind:
 👇
-[💩]   [🖼]    [📃]    [🖼]     [📃]           [💦]
+💩   🖼    📃    🖼     📃           💦
 ```
 .appear[
 ```
-        👆   LOST!     👆
+     👆   LOST!  👆
 ```
 ]
 ]
@@ -1149,7 +1161,7 @@ Rewind:
 1. .appear[Record start state, rewind, replay all other actions]
 ]
 
---
+---
 
 # Proper rewinding of changes
 
@@ -1172,21 +1184,23 @@ Patch based
 
 class: timeline
 
+.timeline_top[
 ```
 🔴 Record patches
 
-[💩]   [🖼]    [📃]    [🖼]     [📃]           [💦]
-                               💥
-^^^^          ^^^^             ^^^^          ^^^^
+ 💩     🖼      📃      🖼        📃          💦
+                                 💥
+^^^^           ^^^              ^^^         ^^^
 ```
+]
 .timeline_bottom.appear[
 ```
 ◀ Reverse apply:
 
-[💩]   [🖼]    [📃]    [🖼]     [📃]           [💦]
-[💩]           [📃]             [📃]           [💦]
-_________________________________________________ -
-       [🖼]            [🖼]
+ 💩     🖼      📃      🖼        📃          💦
+ 💩             📃                📃          💦
+ _____________________________________________ -
+        🖼              🖼
 ```
 ]
 
@@ -1248,22 +1262,23 @@ _________________________________________________ -
 
 class: timeline
 
+.timeline_top[
 ```
 🔴 Record action invocations
 
-[💩]   [🖼]    [📃]    [🖼]     [📃]           [💦]
+ 💩     🖼      📃      🖼       📃             💦
 #1     #2              #3
                                 💥
 ```
+]
 .timeline_bottom.appear[
 ```
 ⏪ Rewind & replay
 👇
-[💩]   [🖼]    [📃]    [🖼]     [📃]           [💦]
+ 💩     🖼      📃      🖼       📃             💦
 
 ▶ #2 #3
-
-       [🖼]           [🖼]
+        🖼             🖼
 ```
 ]
 

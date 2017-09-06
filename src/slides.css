@@ -282,13 +282,26 @@ Custom slide stuff
     max-width: 270px;
 }
 
+.timeline{
+    margin: 0px;
+    padding:0px;
+}
+
 .timeline .remark-code .remark-code-line {
     font-size: 35px;
 }
 
-.timeline .timeline_bottom {
-    background: #E3E3E3;
+.timeline .timeline_top, .timeline .timeline_bottom {
     width: 1210px;
-    margin-left: -80px;
+    height: 350px;
     padding: 40px 80px;
+    box-sizing: border-box
+}
+
+.timeline .timeline_bottom {
+    background: #1780b9;
+}
+
+.timeline .timeline_bottom .remark-code-line {
+    color: white !important;
 }
