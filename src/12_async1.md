@@ -26,12 +26,20 @@ Rewind:
 
 ---
 
-
 # Proper rewinding of changes
 
 .inline_block[
 1. .appear[Record patches (diffs) and revert them]
 1. .appear[Record start state, rewind, replay all other actions]
+]
+
+--
+
+# Proper rewinding of changes
+
+.inline_block[
+1. git revert
+1. git rebase
 ]
 
 ---

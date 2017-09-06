@@ -32,6 +32,6 @@ Primitives to address cross cutting concerns in a generic way
 
 # Mobx-state-tree
 
-It's React, but for data
+It's React, It's Git, but for data
 
 @mweststrate - Mendix

@@ -334,7 +334,7 @@ Calling an action transitions the tree to a next state
 ---
 
 
-# React: explicit lifecycle
+# React: lifecycle & dependency injection
 
 .number.bg_green[
   3
@@ -343,31 +343,17 @@ Calling an action transitions the tree to a next state
 .number_column[
 ```javascript
 export class Bathroom extends Component {
+    static contextTypes = {
+        drain: PropTypes.object
+    }
+
     componentWillMount() {
-        this.connectToDrain()
+        this.context.drain.connect()
     }
 
     componentWillUnmount() {
-        this.disconnectFromDrain()
+        this.context.drain.disconnect()
     }
-}
-```
-]
-
----
-
-# React: dependency injection
-
-.number.bg_purple[
-  4
-]
-
-.number_column[
-```javascript
-class Lightbulb extends React.Component {
-  static contextTypes = {
-    electricity: PropTypes.object
-  }
 }
 ```
 ]
@@ -414,7 +400,7 @@ const bathroom = Bathroom.create(data, { drain: somedrain })
 # React: instance reconciliation
 
 .number.bg_red[
-  5
+  4
 ]
 
 .number_column[

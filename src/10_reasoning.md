@@ -26,13 +26,6 @@ Deltas describing updates that were applied to the tree.
 
 ---
 
-
-# JSON Patch
-
-_Like a git patch: describes the modifications from one commit to the next_
-
----
-
 # JSON Patch
 
 .inline_block[
@@ -49,12 +42,7 @@ _Like a git patch: describes the modifications from one commit to the next_
 
 # JSON Patch
 
-.inline_block[
-1. Fine grained observability
-2. Reversable
-3. RFC-6902
-]
-
+_Like a git patch: describes the modifications from one commit to the next_
 
 ---
 
@@ -66,7 +54,7 @@ Intercept action invocations
 
 # Middleware
 
-_Like git hooks: pre- / post process specific events_
+_Like git hooks: pre- / post process specific commands_
 
 ---
 
@@ -75,12 +63,14 @@ _Like git hooks: pre- / post process specific events_
 .inline_block[
 ```
 addMiddleware(tree, (call, next) => {
+
     /* some pre-processing */
 
     // invoke next middleware
     const res = next(call)
 
     /* some post-processing */
+
     return res
 })
 ```
@@ -205,12 +195,16 @@ class: fullscreenw
 .inline_block[
 ```javascript
 function fullVisit() {
+    delay(1000)
     self.toilet.donate()
     delay(1000)
-    self.wipe()
+    self.isRelaxing = true
+    delay(1000)
+    self.isRelaxing = false
     delay(1000)
     self.wipe()
     delay(1000)
+    self.wipe()
     self.toilet.flush()
 }
 ```
@@ -221,13 +215,17 @@ function fullVisit() {
 .inline_block[
 ```javascript
 async function fullVisit() {
+    await delay(1000)
     self.toilet.donate()
     await delay(1000)
-    self.wipe()
+    self.isRelaxing = true
+    await delay(1000)
+    self.isRelaxing = false
     await delay(1000)
     self.wipe()
     await delay(1000)
-    self.toilet.flush()
+    self.wipe()
+    await self.toilet.flush()
 }
 ```
 
@@ -240,49 +238,39 @@ Nope!
 
 # Asynchronous processes in MST
 
+.inline_block[
+1. Built-in concept
+2. Based on generators
+3. Why: can run middleware on every continuation
+]
+
 ---
 
 .inline_block[
 ```javascript
 const fullVisit = process(function* fullVisit() {
+    yield delay(1000)
     self.toilet.donate()
     yield delay(1000)
-    self.wipe()
+    self.isRelaxing = true
+    yield delay(1000)
+    self.isRelaxing = false
     yield delay(1000)
     self.wipe()
     yield delay(1000)
-    self.toilet.flush()
+    self.wipe()
+    yield self.toilet.flush()
 })
 ```
 ]
-
 
 `async function` &rarr; `process(function* `
 
 `await` &rarr; `yield`
 
-
 ---
 
-.inline_block[
-```javascript
-const fullVisit = process(function* fullVisit() {
-    self.toilet.donate()
-    yield delay(1000)
-    self.wipe()
-    yield delay(1000)
-    self.wipe() // might 💥 in some distant future...
-    yield delay(1000)
-    self.toilet.flush()
-})
-```
-]
 
----
-
-# Generators allow intercepting continuations
-
-So we can run middleware every time the process resumes
 
 ---
 
