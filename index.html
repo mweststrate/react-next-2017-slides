@@ -1327,14 +1327,16 @@ function atomicAsyncAction(call, next) {
 ```
         case "process_throw":
 
-            // find root call
+            // find root call of 💥 action
             const idx = history.findIndex(item => item.id === call.rootId)
+            const rootCall = history[idx]
 
             // restore 'zero' state
-            applySnapshot(history[idx].call.tree, history[idx].snapshot)
+            applySnapshot(rootCall.tree, rootCall.snapshot)
 
             // remove & replay all later action invocations
-            history.splice(idx).slice(1).forEach(item => {
+            const toReplay = history.splice(idx)
+            toReplay.slice(1).forEach(item => {
                 item.call.context[item.call.name].apply(null, item.call.args)
             })
 ```
