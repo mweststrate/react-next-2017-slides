@@ -28,18 +28,15 @@ Rewind:
 
 # Proper rewinding of changes
 
-.inline_block[
-1. .appear[Record patches (diffs) and revert them]
-1. .appear[Record start state, rewind, replay all other actions]
-]
+Time travelling in the face of concurrent updates
 
 ---
 
 # Proper rewinding of changes
 
 .inline_block[
-1. git revert
-1. git rebase
+1. .appear[Record patches and inverse apply them].appear[<br/><img src="img/git.png" width="50" />_Like git revert_<br/><br/>]
+1. .appear[Record start state, rewind, replay all non-failing actions].appear[<br/><img src="img/git.png" width="50" />_Like git rebase_]
 ]
 
 ---

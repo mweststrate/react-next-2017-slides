@@ -802,7 +802,11 @@ Immutable, structurally shared representation of entire state
 
 # Snapshots
 
-_Like a commit in the git history: the complete state at a specific moment in time_
+<img src="img/git.png" width="50" />
+
+Like a git commit
+
+_Describes the entire state at a specific moment in time_
 
 ---
 
@@ -828,7 +832,11 @@ Deltas describing updates that were applied to the tree.
 
 # JSON Patch
 
-_Like a git patch: describes the modifications from one commit to the next_
+<img src="img/git.png" width="50" />
+
+Like a git patch
+
+_Describes the modifications from one commit to the next_
 
 ---
 
@@ -840,7 +848,11 @@ Intercept action invocations
 
 # Middleware
 
-_Like git hooks: pre- / post process specific commands_
+<img src="img/git.png" width="50" />
+
+Like git hooks
+
+_pre- / post process specific commands_
 
 ---
 
@@ -1156,18 +1168,15 @@ Rewind:
 
 # Proper rewinding of changes
 
-.inline_block[
-1. .appear[Record patches (diffs) and revert them]
-1. .appear[Record start state, rewind, replay all other actions]
-]
+Time travelling in the face of concurrent updates
 
 ---
 
 # Proper rewinding of changes
 
 .inline_block[
-1. git revert
-1. git rebase
+1. .appear[Record patches and inverse apply them].appear[<br/><img src="img/git.png" width="50" />_Like git revert_<br/><br/>]
+1. .appear[Record start state, rewind, replay all non-failing actions].appear[<br/><img src="img/git.png" width="50" />_Like git rebase_]
 ]
 
 ---
@@ -1356,6 +1365,7 @@ Primitives to address cross cutting concerns in a generic way
 * Atomic updates
 * Optimistic updates
 * Undo / Redo
+* ...
 ]
 
 ---
@@ -1375,7 +1385,13 @@ Primitives to address cross cutting concerns in a generic way
 
 # Mobx-state-tree
 
-It's React, It's Git, but for data
+<img src="img/react.svg" width="50" /> It's React
+
+<img src="img/git.png" width="50" /> It's Git
+
+...but for data
+
+<hr/>
 
 @mweststrate - Mendix
 

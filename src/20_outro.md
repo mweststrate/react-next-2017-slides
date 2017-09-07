@@ -13,6 +13,7 @@ Primitives to address cross cutting concerns in a generic way
 * Atomic updates
 * Optimistic updates
 * Undo / Redo
+* ...
 ]
 
 ---
@@ -32,6 +33,12 @@ Primitives to address cross cutting concerns in a generic way
 
 # Mobx-state-tree
 
-It's React, It's Git, but for data
+<img src="img/react.svg" width="50" /> It's React
+
+<img src="img/git.png" width="50" /> It's Git
+
+...but for data
+
+<hr/>
 
 @mweststrate - Mendix

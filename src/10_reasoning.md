@@ -16,7 +16,11 @@ Immutable, structurally shared representation of entire state
 
 # Snapshots
 
-_Like a commit in the git history: the complete state at a specific moment in time_
+<img src="img/git.png" width="50" />
+
+Like a git commit
+
+_Describes the entire state at a specific moment in time_
 
 ---
 
@@ -42,7 +46,11 @@ Deltas describing updates that were applied to the tree.
 
 # JSON Patch
 
-_Like a git patch: describes the modifications from one commit to the next_
+<img src="img/git.png" width="50" />
+
+Like a git patch
+
+_Describes the modifications from one commit to the next_
 
 ---
 
@@ -54,7 +62,11 @@ Intercept action invocations
 
 # Middleware
 
-_Like git hooks: pre- / post process specific commands_
+<img src="img/git.png" width="50" />
+
+Like git hooks
+
+_pre- / post process specific commands_
 
 ---
 
