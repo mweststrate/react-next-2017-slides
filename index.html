@@ -2,7 +2,7 @@
 <html>
 	<head>
 		<meta charset="utf-8" />
-		<title>Patches, middleware &amp; snapshots</title>
+		<title>Undo &#x2F; Redo at Mendix</title>
 		<style>
 			@import url('https://fonts.googleapis.com/css?family=Playfair+Display|Raleway|Archivo+Black');
 
@@ -291,6 +291,7 @@ Custom slide stuff
 .timeline{
     margin: 0px;
     padding:0px;
+    text-shadow: -1px 0 black, 0 1px black, 1px 0 black, 0 -1px black;
 }
 
 .timeline .remark-code .remark-code-line {
@@ -936,11 +937,11 @@ class: timeline
 
 .timeline_top[
 ```
-💩📃📃💦
+🦆  💩📃📃💦
 ```
 .appear[
 ```
-     💥
+       💥
      OutOfToiletPaperException
 ```
 <br/>
@@ -950,7 +951,7 @@ class: timeline
 ```
 Rewind:
 👇
-💩📃📃💦
+🦆
 ```
 ]
 
@@ -1074,16 +1075,20 @@ class: timeline
 
 .timeline_top[
 ```
-💩           📃            📃           💦
-                           💥
-               OutOfToiletPaperException
+🦆        💩        📃          📃         💦
 ```
+.appear[
+```
+                               💥
+                    OutOfToiletPaperException
+```
+]
 ]
 .timeline_bottom.appear[
 ```
 Rewind:
 👇
-💩           📃            📃           💦
+🦆
 ```
 ]
 
@@ -1146,20 +1151,23 @@ class: timeline
 
 .timeline_top[
 ```
-💩   🖼    📃    🖼     📃           💦
-                       💥
-             OutOfToiletPaperException
+🦆        💩   🖼    📃     🖼    📃         💦
 ```
-]
+.appear[
+```
+                                 💥
+                      OutOfToiletPaperException
+```
+]]
 .timeline_bottom.appear[
 ```
 Rewind:
 👇
-💩   🖼    📃    🖼     📃           💦
+🦆        💩   🖼    📃     🖼    📃         💦
 ```
 .appear[
 ```
-     👆   LOST!  👆
+              👆   LOST!   👆
 ```
 ]
 ]
@@ -1179,90 +1187,6 @@ Time travelling in the face of concurrent updates
 1. .appear[Record start state, rewind, replay all non-failing actions].appear[<br/><img src="img/git.png" width="50" />_Like git rebase_]
 ]
 
----
-
-# Undo / Redo at Mendix
-
-Patch based
-
----
-
-# Record patches & reverse apply
-
----
-
-class: timeline
-
-.timeline_top[
-```
-🔴 Record patches
-
- 💩     🖼      📃      🖼        📃          💦
-                                 💥
-^^^^           ^^^              ^^^         ^^^
-```
-]
-.timeline_bottom.appear[
-```
-◀ Reverse apply:
-
- 💩     🖼      📃      🖼        📃          💦
- 💩             📃                📃          💦
- _____________________________________________ -
-        🖼              🖼
-```
-]
-
----
-```javascript
-        case "process_spawn":
-            const recorder = recordPatches(call.tree)
-            runningActions.set(call.rootId, recorder)
-            break
-
-        case "process_resume":
-        case "process_resume_error":
-            const recorder = runningActions.get(call.rootId)
-            recorder.resume()
-            try {
-                return next(call)
-            } finally {
-                recorder.stop()
-            }
-
-        case "process_throw":
-            runningActions.get(call.rootId).undo()
-            break
-```
-
----
-
-# Recorded patches
-
-```javascript
-[
-    { op: "add", path: "/toilet/pile/1", value:
-        { type: "💩", weight: 365, smell: 7 }
-    },
-    { op: "replace", path: "/isRelaxing", value: true },
-    { op: "replace", path: "/isRelaxing", value: false },
-    { op: "replace", path: "/amountOfToiletPaper", value: 0 }
-]
-```
-
----
-
-# Inverse of recorded patches
-
-```javascript
-[
-    { op: "remove", path: "/toilet/pile/1" },
-    { op: "replace", path: "/isRelaxing", value: false },
-    { op: "replace", path: "/isRelaxing", value: true },
-    { op: "replace", path: "/amountOfToiletPaper", value: 1 }
-]
-```
-
 
 ---
 # Record actions & replay
@@ -1275,21 +1199,28 @@ class: timeline
 ```
 🔴 Record action invocations
 
- 💩     🖼      📃      🖼       📃             💦
-#1     #2              #3
+🦆        💩   🖼    📃     🖼    📃         💦
+          a1  a2           a3
+```
+.appear[
+```
                                 💥
 ```
-]
+]]
 .timeline_bottom.appear[
 ```
-⏪ Rewind & replay
+⏪ Rewind to start a1
 👇
- 💩     🖼      📃      🖼       📃             💦
+🦆
 
-▶ #2 #3
-        🖼             🖼
 ```
-]
+.appear[
+```
+▶ Replay: a2 a3
+             🖼          🖼
+
+```
+]]
 
 ---
 
@@ -1348,6 +1279,105 @@ function atomicAsyncAction(call, next) {
 ```
 ]
 </div>
+
+---
+
+# Undo / Redo at Mendix
+
+Patch based
+
+---
+
+# Record patches & reverse apply
+
+---
+
+class: timeline
+
+.timeline_top[
+```
+🔴 Record patches
+
+🦆        💩   🖼    📃     🖼    📃         💦
+          ^         ^            ^          ^
+```
+.appear[
+```
+                                 💥
+```
+]]
+.timeline_bottom[
+.appear[
+```
+◀ Reverse apply:
+
+🦆        💩   🖼    📃     🖼
+```
+]
+.appear[
+<div style="transform: scale(1, -1); padding-left: 400px">
+📃 💩
+</div>
+]
+.appear[
+```
+ _____________________________________________ -
+
+🦆             🖼           🖼
+```
+]
+
+]
+---
+
+# Recorded patches
+
+```javascript
+[
+    { op: "add", path: "/toilet/pile/1", value:
+        { type: "💩", weight: 365, smell: 7 }
+    },
+    { op: "replace", path: "/isRelaxing", value: true },
+    { op: "replace", path: "/isRelaxing", value: false },
+    { op: "replace", path: "/amountOfToiletPaper", value: 0 }
+]
+```
+
+---
+
+# Inverse of recorded patches
+
+```javascript
+[
+    { op: "remove", path: "/toilet/pile/1" },
+    { op: "replace", path: "/isRelaxing", value: false },
+    { op: "replace", path: "/isRelaxing", value: true },
+    { op: "replace", path: "/amountOfToiletPaper", value: 1 }
+]
+```
+
+---
+
+```javascript
+        case "process_spawn":
+            const recorder = recordPatches(call.tree)
+            runningActions.set(call.rootId, recorder)
+            break
+
+        case "process_resume":
+        case "process_resume_error":
+            const recorder = runningActions.get(call.rootId)
+            recorder.resume()
+            try {
+                return next(call)
+            } finally {
+                recorder.stop()
+            }
+
+        case "process_throw":
+            runningActions.get(call.rootId).undo()
+            break
+```
 
 ---
 <!-- 20_outro.md-->

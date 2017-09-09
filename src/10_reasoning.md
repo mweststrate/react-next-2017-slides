@@ -150,11 +150,11 @@ class: timeline
 
 .timeline_top[
 ```
-💩📃📃💦
+🦆  💩📃📃💦
 ```
 .appear[
 ```
-     💥
+       💥
      OutOfToiletPaperException
 ```
 <br/>
@@ -164,7 +164,7 @@ class: timeline
 ```
 Rewind:
 👇
-💩📃📃💦
+🦆
 ```
 ]
 
@@ -288,16 +288,20 @@ class: timeline
 
 .timeline_top[
 ```
-💩           📃            📃           💦
-                           💥
-               OutOfToiletPaperException
+🦆        💩        📃          📃         💦
 ```
+.appear[
+```
+                               💥
+                    OutOfToiletPaperException
+```
+]
 ]
 .timeline_bottom.appear[
 ```
 Rewind:
 👇
-💩           📃            📃           💦
+🦆
 ```
 ]
 
