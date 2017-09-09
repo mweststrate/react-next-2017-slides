@@ -209,16 +209,17 @@ class: fullscreenw
 .inline_block[
 ```javascript
 function fullVisit() {
-    delay(1000)
+    // wait...
     self.toilet.donate()
-    delay(1000)
+    // wait...
     self.isRelaxing = true
-    delay(1000)
+    // wait...
     self.isRelaxing = false
-    delay(1000)
+    // wait...
     self.wipe()
-    delay(1000)
+    // wait...
     self.wipe()
+    // wait...
     self.toilet.flush()
 }
 ```
@@ -239,6 +240,7 @@ async function fullVisit() {
     self.wipe()
     await delay(1000)
     self.wipe()
+    await delay(1000)
     await self.toilet.flush()
 }
 ```
@@ -273,6 +275,7 @@ const fullVisit = process(function* fullVisit() {
     self.wipe()
     yield delay(1000)
     self.wipe()
+    yield delay(1000)
     yield self.toilet.flush()
 })
 ```

@@ -33,10 +33,6 @@ Michel Weststrate - @mweststrate
 
 ---
 
-Why I <i class="em em-heart"></i> React
-
----
-
 # React: composes components
 
 .number.bg_navy[
