@@ -210,6 +210,16 @@ const instance = Type.create(snapshot)
 ---
 
 
+Calling an action transitions the tree to a next state
+
+.type_create[
+<img src="img/mst_tree.svg" />
+&rarr;
+<img src="img/mst_tree_2.svg" />
+]
+
+---
+
 # Getting the "props" out
 
 .type_create[
@@ -257,10 +267,45 @@ onSnapshot(bathroom, snapshot => {
 
 ---
 
+# React: instance reconciliation
+
+.number.bg_red[
+  2
+]
+
+.number_column[
+1. Performance
+2. Preserve internal state<br/ ><input value="Test" style="margin-left: 7px;
+    padding: 5px;
+    font-size: 16px;
+    border: 2px solid #ccc;" />
+]
+
+---
+
+# MST: instance reconciliation
+
+.type_create[
+<img src="img/mst_tree.svg" />
++
+<img src="img/json_2.svg" />
+&rarr;
+<img src="img/mst_tree_2.svg" />
+]
+
+.inline_block[
+```
+applySnapshot(bathroom, someNewSnapshot)
+```
+]
+
+---
+
+
 # React: contract based
 
 .number.bg_orange[
-  2
+  3
 ]
 
 .number_column[
@@ -273,7 +318,7 @@ onSnapshot(bathroom, snapshot => {
 # MST: contract based
 
 .number.bg_orange[
-  2
+  3
 ]
 
 .number_column[
@@ -317,15 +362,6 @@ bathroom.restock()
 ```
 ]
 
----
-
-Calling an action transitions the tree to a next state
-
-.type_create[
-<img src="img/mst_tree.svg" />
-&rarr;
-<img src="img/mst_tree_2.svg" />
-]
 
 ---
 
@@ -333,7 +369,7 @@ Calling an action transitions the tree to a next state
 # React: lifecycle & dependency injection
 
 .number.bg_green[
-  3
+  4
 ]
 
 .number_column[
@@ -388,40 +424,6 @@ const Toilet = types.actions(self => {
 ```
 
 const bathroom = Bathroom.create(data, { drain: somedrain })
-```
-]
-
----
-
-# React: instance reconciliation
-
-.number.bg_red[
-  4
-]
-
-.number_column[
-1. Performance
-2. Preserve internal state<br/ ><input value="Test" style="margin-left: 7px;
-    padding: 5px;
-    font-size: 16px;
-    border: 2px solid #ccc;" />
-]
-
----
-
-# MST: instance reconciliation
-
-.type_create[
-<img src="img/mst_tree.svg" />
-+
-<img src="img/json_2.svg" />
-&rarr;
-<img src="img/mst_tree_2.svg" />
-]
-
-.inline_block[
-```
-applySnapshot(bathroom, someNewSnapshot)
 ```
 ]
 
