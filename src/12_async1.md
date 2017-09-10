@@ -64,13 +64,13 @@ class: timeline
 ]]
 .timeline_bottom.appear[
 ```
-⏪ Rewind to start a1
+⏪ Rewind to before a1
 👇
 🦆
-
 ```
 .appear[
 ```
+
 ▶ Replay: a2 a3
              🖼          🖼
 

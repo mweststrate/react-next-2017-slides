@@ -98,54 +98,6 @@ addMiddleware(tree, (call, next) => {
 
 ---
 
-.inline_block[
-```javascript
-    .actions(self => {
-
-        function fullVisit() {
-            self.toilet.donate()
-            self.wipe() // 💥 <- Don't want to get stuck here...
-            self.wipe()
-            self.toilet.flush()
-        }
-
-        return {
-            fullVisit
-        }
-    })
-```
-]
-
----
-
-.inline_block[
-.boring[
-```javascript
-    .actions(self => {
-
-        function fullVisit() {
-            self.toilet.donate()
-            self.wipe() // 💥 <- Don't want to get stuck here...
-            self.wipe()
-            self.toilet.flush()
-        }
-```
-]
-
-```
-
-        return {
-            fullVisit : decorate(atomic, fullVisit)
-        }
-```
-.boring[
-```
-    })
-```
-]]
-
----
-
 class: timeline
 
 .timeline_top[

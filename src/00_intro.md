@@ -132,6 +132,30 @@ const Bathroom = types.model({
 
 ---
 
+.center[
+<img src="img/react.svg" width="50" /><br/>
+React composes a tree of component intances
+
+.inline_block[
+```
+const instance = React.createElement(Component, props)
+```
+]
+
+<br/>
+<br/>
+<img src="img/logo.png" width="50" /><br/>
+
+MST composes a tree of rich type instances
+.inline_block[
+```
+const instance = Type.create(snapshot)
+```
+]
+]
+
+---
+
 class: columns
 
 .left[
@@ -185,32 +209,8 @@ const tree = Bathroom.create(snapshot)
 
 ---
 
-.center[
-<img src="img/react.svg" width="50" /><br/>
-React composes a tree of component intances
 
-.inline_block[
-```
-const instance = React.createElement(Component, props)
-```
-]
-
-<br/>
-<br/>
-<img src="img/logo.png" width="50" /><br/>
-
-MST composes a tree of rich type instances
-.inline_block[
-```
-const instance = Type.create(snapshot)
-```
-]
-]
-
----
-
-
-Calling an action transitions the tree to a next state
+# Actions transition tree to next state
 
 .type_create[
 <img src="img/mst_tree.svg" />
@@ -267,45 +267,11 @@ onSnapshot(bathroom, snapshot => {
 
 ---
 
-# React: instance reconciliation
-
-.number.bg_red[
-  2
-]
-
-.number_column[
-1. Performance
-2. Preserve internal state<br/ ><input value="Test" style="margin-left: 7px;
-    padding: 5px;
-    font-size: 16px;
-    border: 2px solid #ccc;" />
-]
-
----
-
-# MST: instance reconciliation
-
-.type_create[
-<img src="img/mst_tree.svg" />
-+
-<img src="img/json_2.svg" />
-&rarr;
-<img src="img/mst_tree_2.svg" />
-]
-
-.inline_block[
-```
-applySnapshot(bathroom, someNewSnapshot)
-```
-]
-
----
-
 
 # React: contract based
 
 .number.bg_orange[
-  3
+  2
 ]
 
 .number_column[
@@ -318,7 +284,7 @@ applySnapshot(bathroom, someNewSnapshot)
 # MST: contract based
 
 .number.bg_orange[
-  3
+  2
 ]
 
 .number_column[
@@ -330,24 +296,24 @@ applySnapshot(bathroom, someNewSnapshot)
 ---
 
 .inline_block[
+.boring[
 ```
 const Bathroom = types
     .model(/* props */)
+```
+]
+```
     .actions(self => {
 
-        /* local state & actions */
-        let restockFactor = 4
+        /* local state & funcs */
+        let drainSocket
 
-        function wipe() {
-            self.amountOfToiletPaper -= 1
-        }
-
-        function restock() {
-            self.amountOfToiletPaper += restockFactor
+        function flush() {
+            drainSocket.send(self.toilet.pile)
         }
 
         /* exposed actions */
-        return { wipe, restock }
+        return { flush }
     })
 ```
 ]
@@ -358,7 +324,7 @@ const Bathroom = types
 ```
 const bathroom = Bathroom.create(snapshot)
 
-bathroom.restock()
+bathroom.flush()
 ```
 ]
 
@@ -369,7 +335,7 @@ bathroom.restock()
 # React: lifecycle & dependency injection
 
 .number.bg_green[
-  4
+  3
 ]
 
 .number_column[
@@ -403,21 +369,22 @@ const Toilet = types.actions(self => {
 ]
 ```
 
-    const { drain } = getEnv(self)
+    let drainSocket
 
     function postCreate() {
-        drain.connect()
+        drainSocket = getEnv(self).drain.getSocket
+        drainSocket.connect()
     }
 
     function beforeDestroy() {
-        drain.disconnect()
+        drainSocket.disconnect()
     }
 
 ```
 .boring[
 ```
 
-    return { beforeDestroy, postCreate }
+    return { flush, beforeDestroy, postCreate }
 })
 ```
 ]
@@ -426,6 +393,45 @@ const Toilet = types.actions(self => {
 const bathroom = Bathroom.create(data, { drain: somedrain })
 ```
 ]
+
+---
+
+# React: instance reconciliation
+
+.number.bg_red[
+  4
+]
+
+.number_column[
+1. Performance
+2. Preserve internal state<br/ ><input value="Test" style="margin-left: 7px;
+    padding: 5px;
+    font-size: 16px;
+    border: 2px solid #ccc;" />
+]
+
+---
+
+# MST: instance reconciliation
+
+.inline_block[
+```
+applySnapshot(bathroom, someNewSnapshot)
+```
+]
+
+.type_create[
+<img src="img/mst_tree.svg" />
++
+<img src="img/json_2.svg" />
+&rarr;
+<img src="img/mst_tree_2.svg" />
+]
+
+
+<small>
+Local state like `drainSocket` is preserved / life-cycle hooks will run
+</small>
 
 ---
 

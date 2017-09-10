@@ -41,4 +41,10 @@ Primitives to address cross cutting concerns in a generic way
 
 <hr/>
 
+.appear[
+    Let's release this 💩!
+]
+
+<hr/>
+
 @mweststrate - Mendix
